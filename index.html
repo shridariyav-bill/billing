@@ -29,7 +29,9 @@
     .b-nav i { font-size: 1.2rem; }
     .card { background: var(--card); border-radius: 8px; border: 1px solid var(--border); padding: 18px; margin-bottom: 18px; }
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .grid-5-cust { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .grid-5 { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr 1fr auto; gap: 10px; align-items: flex-end; }
     .form-group { display: flex; flex-direction: column; gap: 4px; }
     label { font-size: 0.82rem; font-weight: 600; color: #475569; }
     input, select { padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; width: 100%; outline: none; }
@@ -44,39 +46,123 @@
     .data-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
     .data-table th, .data-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.88rem; }
     .data-table th { background: #f8fafc; font-weight: 600; }
-    .search-hint { font-size: 11px; color: #64748b; margin-top: 2px; }
 
-    /* Tally/Busy Print Modal */
-    #print-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; overflow-y: auto; padding: 15px; }
-    .tally-invoice-wrap { background: white; width: 210mm; min-height: 297mm; margin: 0 auto; padding: 10mm; color: #000; font-family: 'Arial', sans-serif; font-size: 12px; line-height: 1.3; }
-    .t-box { border: 1.5px solid #000; width: 100%; }
-    .t-header { text-align: center; border-bottom: 1.5px solid #000; padding: 6px; }
-    .t-title { font-size: 14px; font-weight: bold; letter-spacing: 1px; }
-    .t-company-name { font-size: 20px; font-weight: 900; margin: 3px 0; }
-    .t-row { display: flex; width: 100%; }
-    .t-col-6 { width: 50%; padding: 6px; }
+    /* Fast POS Auto-Complete Dropdown */
+    .pos-search-wrapper { position: relative; width: 100%; }
+    .pos-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1.5px solid var(--primary-light); border-top: none; border-radius: 0 0 8px 8px; max-height: 250px; overflow-y: auto; z-index: 1000; box-shadow: 0 8px 20px rgba(0,0,0,0.15); display: none; }
+    .pos-item-row { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .pos-item-row:hover, .pos-item-row.selected { background-color: #eff6ff; }
+    .pos-item-code { font-weight: bold; color: var(--primary); margin-right: 8px; }
+    .pos-item-name { font-weight: 600; color: #1e293b; }
+    .pos-item-meta { font-size: 12px; color: #64748b; }
+    .pos-item-price { font-weight: bold; color: #16a34a; font-size: 14px; }
+
+    /* Modal Styling with Scrollability */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 2000; align-items: center; justify-content: center; padding: 15px; overflow-y: auto; }
+    .modal-content-box { background: white; border-radius: 10px; width: 520px; max-width: 95%; max-height: 90vh; overflow-y: auto; padding: 22px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
+
+    /* -------------------------------------------------------------
+       TALLY INVOICE LAYOUT (FULL-PAGE PROPORTIONAL FLEX LAYOUT)
+       ------------------------------------------------------------- */
+    #print-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2500; overflow-y: auto; padding: 15px; }
+    .tally-invoice-wrap { 
+      background: white; 
+      width: 210mm; 
+      height: 285mm; 
+      margin: 0 auto; 
+      padding: 6mm; 
+      color: #000; 
+      font-family: 'Arial', sans-serif; 
+      font-size: 11.5px; 
+      line-height: 1.25; 
+      box-sizing: border-box;
+    }
+    .t-box { 
+      border: 1.5px solid #000; 
+      width: 100%; 
+      height: 100%; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: space-between; 
+      box-sizing: border-box;
+    }
+    .t-header { text-align: center; border-bottom: 1.5px solid #000; padding: 5px; flex-shrink: 0; }
+    .t-title { font-size: 13px; font-weight: bold; letter-spacing: 1px; }
+    .t-company-name { font-size: 18px; font-weight: 900; margin: 2px 0; }
+    .t-row { display: flex; width: 100%; flex-shrink: 0; }
+    .t-col-6 { width: 50%; padding: 5px; box-sizing: border-box; }
     .border-b { border-bottom: 1.5px solid #000; }
     .border-r { border-right: 1.5px solid #000; }
-    .t-table { width: 100%; border-collapse: collapse; }
-    .t-table th { border-bottom: 1.5px solid #000; border-right: 1px solid #000; padding: 5px; font-size: 11px; background: #fafafa; }
-    .t-table td { border-bottom: 1px solid #ddd; border-right: 1px solid #000; padding: 5px 6px; font-size: 11.5px; }
-    .t-table th:last-child, .t-table td:last-child { border-right: none; }
-    .tax-breakup-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-    .tax-breakup-table th, .tax-breakup-table td { border: 1px solid #000; padding: 4px; text-align: center; font-size: 10px; }
 
-    @media print {
-      body * { visibility: hidden; }
-      #print-modal, #print-modal * { visibility: visible; }
-      #print-modal { position: absolute; left: 0; top: 0; width: 100%; background: none; padding: 0; }
-      .tally-invoice-wrap { margin: 0; width: 100%; border: none; padding: 5mm; }
-      .no-print { display: none !important; }
-      @page { size: A4 portrait; margin: 5mm; }
+    .t-table-container {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1.5px solid #000;
+      position: relative;
     }
-    @media (max-width: 768px) {
+    .t-table { width: 100%; border-collapse: collapse; height: 100%; }
+    .t-table thead tr { height: 26px; }
+    .t-table th { border-bottom: 1.5px solid #000; border-right: 1px solid #000; padding: 4px; font-size: 10.5px; background: #fafafa; }
+    .t-table td { border-right: 1px solid #000; padding: 4px 6px; font-size: 11px; }
+    .t-table th:last-child, .t-table td:last-child { border-right: none; }
+    
+    .t-table tr.item-row td { border-bottom: 1px solid #ccc; }
+    .t-table tr.blank-fill-row td { border-bottom: none !important; }
+
+    .tax-breakup-table { width: 100%; border-collapse: collapse; margin-top: 3px; }
+    .tax-breakup-table th, .tax-breakup-table td { border: 1px solid #000; padding: 3px; text-align: center; font-size: 9.5px; }
+
+    /* ---------------------------------------------------------
+       100% PERFECT 1-PAGE A4 PRINT CSS
+       --------------------------------------------------------- */
+    @media print {
+      html, body {
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+        overflow: hidden !important;
+      }
+      .app-container, .sidebar, .main-content, .bottom-bar, .modal-overlay, .no-print {
+        display: none !important;
+      }
+      #print-modal {
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: none !important;
+        overflow: hidden !important;
+      }
+      .tally-invoice-wrap {
+        width: 100% !important;
+        height: 285mm !important;
+        margin: 0 !important;
+        padding: 3mm !important;
+        border: none !important;
+        page-break-inside: avoid !important;
+        page-break-after: avoid !important;
+        page-break-before: avoid !important;
+      }
+      .t-box {
+        height: 100% !important;
+        page-break-inside: avoid !important;
+      }
+      @page {
+        size: A4 portrait;
+        margin: 5mm;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .grid-5 { grid-template-columns: 1fr 1fr; }
       .sidebar { display: none; }
       .bottom-bar { display: flex; }
       .main-content { padding: 12px; }
-      .tally-invoice-wrap { width: 100%; padding: 5px; }
     }
   </style>
 </head>
@@ -84,7 +170,7 @@
 
 <div class="app-container">
   <aside class="sidebar">
-    <h2>⚡NUTAN ERP SYSTEM</h2>
+    <h2>⚡ ERP SYSTEM</h2>
     <button class="nav-btn active" onclick="switchTab('billing')"><i class="fa-solid fa-file-invoice"></i> New Invoice</button>
     <button class="nav-btn" onclick="switchTab('history')"><i class="fa-solid fa-clock-rotate-left"></i> Invoice History</button>
     <button class="nav-btn" onclick="switchTab('ledger')"><i class="fa-solid fa-book"></i> Party Ledger</button>
@@ -106,13 +192,24 @@
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
           <h2 style="font-size:1.25rem;">🧾 Billing Counter</h2>
           <div style="display:flex; gap:15px;">
-            <label style="cursor:pointer;"><input type="radio" name="bill_type" value="GST" checked onchange="updateCart()"> <strong>GST Tax Invoice</strong></label>
-            <label style="cursor:pointer;"><input type="radio" name="bill_type" value="NON_GST" onchange="updateCart()"> <strong>Bill of Supply / Estimate</strong></label>
+            <label style="cursor:pointer;"><input type="radio" name="bill_type" value="GST" checked onchange="onBillTypeChange()"> <strong>GST Tax Invoice (B2B / B2C)</strong></label>
+            <label style="cursor:pointer;"><input type="radio" name="bill_type" value="NON_GST" onchange="onBillTypeChange()"> <strong>Bill of Supply / Estimate</strong></label>
           </div>
         </div>
 
-        <div class="grid-4">
-          <div class="form-group"><label>Customer Name</label><input type="text" id="cust-name" value="Cash Customer"></div>
+        <div class="grid-5-cust">
+          <div class="form-group"><label>Customer / Firm Name</label><input type="text" id="cust-name" value="Cash Customer"></div>
+          <div class="form-group" id="group-cust-gstin">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <label>Customer GSTIN (B2B)</label>
+              <span id="gstin-status" style="font-size:10px; color:#2563eb; font-weight:bold;"></span>
+            </div>
+            <div style="display:flex; gap:4px;">
+              <input type="text" id="cust-gstin" placeholder="08AAAAA0000A1Z5" style="text-transform:uppercase;" onchange="autoLookupGstin()">
+              <button class="btn btn-primary" style="padding:4px 9px; font-size:11px;" onclick="autoLookupGstin()" title="Fetch Name & Address">🔍</button>
+              <button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openGovtGstPortal()" title="Open Official GST Portal">🌐</button>
+            </div>
+          </div>
           <div class="form-group"><label>Mobile Number</label><input type="tel" id="cust-phone" placeholder="98XXXXXXXX"></div>
           <div class="form-group"><label>City / Address</label><input type="text" id="cust-address" placeholder="Nagaur"></div>
           <div class="form-group">
@@ -130,60 +227,78 @@
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
           <div style="display:flex; align-items:center; gap:10px;">
-            <h4 style="color:var(--primary-light);"><i class="fa-solid fa-cart-plus"></i> Select Item</h4>
-            <span id="sheet-sync-status" style="font-size:12px; color:#16a34a;"><i class="fa-solid fa-spinner fa-spin"></i> Loading Google Sheet...</span>
+            <h4 style="color:var(--primary-light);"><i class="fa-solid fa-cart-plus"></i> Select Item & Warranty</h4>
+            <span id="sheet-sync-status" style="font-size:12px; color:#16a34a;"><i class="fa-solid fa-spinner fa-spin"></i> Syncing Cloud Data...</span>
           </div>
           <div style="display:flex; gap:8px;">
-            <button class="btn btn-outline" style="font-size:12px; padding:4px 10px;" onclick="syncGoogleSheet(true)"><i class="fa-solid fa-rotate"></i> 🔄 Refresh Sheet</button>
-            <button class="btn btn-outline" style="font-size:12px; padding:4px 10px;" onclick="toggleManualItemModal()"><i class="fa-solid fa-bolt"></i> + Add Unlisted Item</button>
+            <button class="btn btn-outline" style="font-size:12px; padding:4px 10px;" onclick="syncAllData(true)"><i class="fa-solid fa-rotate"></i> 🔄 Refresh Cloud Data</button>
+            <button class="btn btn-primary" style="font-size:12px; padding:4px 10px;" onclick="toggleManualItemModal()"><i class="fa-solid fa-plus"></i> + Add Unlisted Item</button>
           </div>
         </div>
 
-        <!-- Quick Code Search Bar -->
-        <div style="background:#f1f5f9; padding:10px; border-radius:6px; margin-bottom:15px; border:1px solid #e2e8f0;">
-          <div class="form-group">
-            <label style="color:#1e3a8a;"><i class="fa-solid fa-barcode"></i> Quick Search by Item Code / Model No. (Press Enter to Select):</label>
-            <input type="text" id="quick-code-search" placeholder="Type Item Code (e.g. 21001, ROM-1W, BULB-9W)..." onkeyup="handleQuickCodeSearch(event)">
-            <span class="search-hint">Type exact code and hit Enter, or select from the dropdown below.</span>
-          </div>
+        <!-- 1. Live Auto-complete Search Box -->
+        <div class="pos-search-wrapper" style="margin-bottom: 12px;">
+          <label style="font-size: 0.85rem; font-weight: 700; color: #1e3a8a;">🔍 Search Item by Code or Name (Type & Click or hit Enter):</label>
+          <input type="text" id="pos-search-input" 
+                 placeholder="Type code or name (e.g. 21001, roma, bulb, wire)..." 
+                 autocomplete="off"
+                 style="padding: 10px 14px; font-size: 1rem; font-weight: 600; border: 2px solid var(--primary-light); border-radius: 6px;"
+                 oninput="handlePosSearchInput(this.value)"
+                 onkeydown="handlePosSearchKeydown(event)">
+          <div id="pos-dropdown" class="pos-dropdown"></div>
         </div>
 
-        <div class="grid-3">
+        <!-- 2. Inputs Grid with Rate, Qty, Serial No, Warranty Months -->
+        <div class="grid-5" style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
           <div class="form-group">
-            <label>Choose Item from Stock</label>
-            <select id="item-select" onchange="onItemChange()"></select>
+            <label>Selected Item</label>
+            <input type="text" id="item-name-display" placeholder="Item Name will appear here" readonly style="background:#e2e8f0; font-weight:600;">
+            <input type="hidden" id="selected-item-id">
           </div>
           <div class="form-group">
             <label>Rate (Incl. Tax ₹)</label>
-            <input type="number" id="item-price" min="0" step="any">
+            <input type="number" id="item-price" min="0" step="any" placeholder="Price">
           </div>
           <div class="form-group">
             <label>Quantity (Qty)</label>
-            <input type="number" id="item-qty" value="1" min="0.1" step="any">
+            <input type="number" id="item-qty" value="1" min="0.1" step="any" onkeydown="if(event.key==='Enter') document.getElementById('item-serial').focus()">
           </div>
           <div class="form-group">
-            <label>Serial / IMEI (For Warranty)</label>
-            <input type="text" id="item-serial" placeholder="Enter SN">
+            <label>Serial / IMEI (Warranty)</label>
+            <input type="text" id="item-serial" placeholder="Enter SN / IMEI" onkeydown="if(event.key==='Enter') document.getElementById('item-warranty').focus()">
           </div>
           <div class="form-group">
             <label>Warranty (Months)</label>
-            <input type="number" id="item-warranty" value="12">
+            <input type="number" id="item-warranty" value="12" placeholder="Months" onkeydown="if(event.key==='Enter') addItemToCartFromInputs()">
           </div>
-          <div class="form-group" style="justify-content: flex-end;">
-            <button class="btn btn-primary" onclick="addToCart()"><i class="fa-solid fa-plus"></i> Add to Cart</button>
+          <div class="form-group">
+            <button class="btn btn-primary" onclick="addItemToCartFromInputs()" style="height: 38px;"><i class="fa-solid fa-plus"></i> Add to Cart</button>
           </div>
         </div>
 
-        <table class="data-table" id="cart-table">
+        <!-- Cart Table -->
+        <table class="data-table" id="cart-table" style="margin-top: 15px;">
           <thead>
-            <tr><th>#</th><th>Code</th><th>Description</th><th>Serial No.</th><th>Warranty</th><th>Qty</th><th>Rate (Incl. Tax)</th><th>Taxable</th><th>GST</th><th>Total (₹)</th><th>Action</th></tr>
+            <tr>
+              <th>#</th>
+              <th>Code</th>
+              <th>Description</th>
+              <th>Serial / IMEI</th>
+              <th>Warranty</th>
+              <th>Qty</th>
+              <th>Rate (Incl. Tax)</th>
+              <th id="th-taxable">Taxable</th>
+              <th id="th-gst">GST</th>
+              <th>Total (₹)</th>
+              <th>Action</th>
+            </tr>
           </thead>
           <tbody></tbody>
         </table>
 
         <div style="display:flex; justify-content:flex-end; margin-top:15px;">
           <div style="width:280px; text-align:right;">
-            <p>Taxable Value: <strong id="cart-subtotal">₹0.00</strong></p>
+            <p id="subtotal-row">Taxable Value: <strong id="cart-subtotal">₹0.00</strong></p>
             <p id="gst-row">GST Tax: <strong id="cart-tax">₹0.00</strong></p>
             <h3 style="margin-top:5px; border-top:1px solid #ccc; padding-top:5px;">Grand Total: <span id="cart-total" style="color:var(--primary-light);">₹0.00</span></h3>
             <button class="btn btn-success btn-block" style="margin-top:12px;" onclick="saveAndPrintInvoice()"><i class="fa-solid fa-floppy-disk"></i> Save Bill & Print</button>
@@ -195,9 +310,12 @@
     <!-- Invoice History Tab -->
     <section id="tab-history" style="display:none;">
       <div class="card">
-        <h2><i class="fa-solid fa-clock-rotate-left"></i> Invoice History & Re-Print</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <h2><i class="fa-solid fa-clock-rotate-left"></i> Cloud Invoice History (All Devices)</h2>
+          <button class="btn btn-outline" onclick="loadInvoicesFromCloud(true)"><i class="fa-solid fa-rotate"></i> Refresh History</button>
+        </div>
         <table class="data-table">
-          <thead><tr><th>Inv #</th><th>Type</th><th>Date</th><th>Customer</th><th>Payment</th><th>Amount</th><th>Action</th></tr></thead>
+          <thead><tr><th>Inv #</th><th>Type</th><th>Date</th><th>Customer</th><th>GSTIN</th><th>Payment</th><th>Amount</th><th>Action</th></tr></thead>
           <tbody id="history-rows"></tbody>
         </table>
       </div>
@@ -213,15 +331,22 @@
         </div>
       </div>
       <div class="card" id="ledger-details-box" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
           <h3>Transaction History</h3>
-          <div style="display:flex; gap:10px;">
-            <input type="number" id="rec-amount" placeholder="Received Amt (₹)" style="width:140px;">
-            <button class="btn btn-success" onclick="receivePayment()">Receive Payment</button>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <input type="number" id="rec-amount" placeholder="Received Amt (₹)" style="width:130px;">
+            <select id="rec-mode" style="width:130px;">
+              <option value="Cash">Cash</option>
+              <option value="UPI">UPI / GPay</option>
+              <option value="Bank">Bank Transfer</option>
+              <option value="Cheque">Cheque</option>
+            </select>
+            <input type="text" id="rec-note" placeholder="Note / Ref" style="width:120px;">
+            <button class="btn btn-success" onclick="receivePayment()"><i class="fa-solid fa-hand-holding-dollar"></i> Receive Payment</button>
           </div>
         </div>
         <table class="data-table" id="party-txn-table">
-          <thead><tr><th>Date</th><th>Description</th><th>Ref #</th><th>Debit (+)</th><th>Credit (-)</th><th>Balance</th></tr></thead>
+          <thead><tr><th>Date</th><th>Description</th><th>Mode</th><th>Ref #</th><th>Debit (+)</th><th>Credit (-)</th><th>Balance</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -233,7 +358,7 @@
         <h2><i class="fa-brands fa-google-drive" style="color:#0f9d58;"></i> Google Sheet Live Connection</h2>
         <p style="font-size:0.88rem; color:#475569; margin:6px 0;">Google Sheet Structure: <strong>Item Code (A) | Item Name (B) | HSN (C) | Unit (D) | Purchase Price (E) | Selling Price (F) | GST Rate (G) | Stock (H)</strong></p>
         <div style="display:flex; gap:10px; margin-top:10px;">
-          <button class="btn btn-success" onclick="syncGoogleSheet(true)"><i class="fa-solid fa-rotate"></i> 🔄 Sync Now from Google Sheet</button>
+          <button class="btn btn-success" onclick="syncAllData(true)"><i class="fa-solid fa-rotate"></i> 🔄 Sync Now from Google Sheet</button>
         </div>
       </div>
       <div class="card">
@@ -247,101 +372,128 @@
   </main>
 </div>
 
-<!-- Modal for Adding Unlisted Item on the Fly -->
-<div id="manual-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1500; align-items:center; justify-content:center;">
-  <div class="card" style="width:420px; max-width:90%;">
-    <h3>⚡ Add Unlisted Item Directly</h3>
+<!-- Modal for Adding Unlisted Item (Scrollable Fix) -->
+<div id="manual-modal" class="modal-overlay">
+  <div class="modal-content-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 style="color:var(--primary); margin:0;"><i class="fa-solid fa-cloud-arrow-up"></i> Add New Unlisted Item</h3>
+      <button onclick="toggleManualItemModal()" style="background:none; border:none; font-size:18px; cursor:pointer; color:#64748b;">✕</button>
+    </div>
+    <p style="font-size:12px; color:#64748b; margin-bottom:14px;">This item will be added to the current invoice AND permanently saved to your Google Sheet inventory.</p>
+    
     <div class="grid-3">
-      <div class="form-group"><label>Item Code</label><input type="text" id="m-code" placeholder="e.g. 21001"></div>
-      <div class="form-group" style="grid-column: span 2;"><label>Item Name</label><input type="text" id="m-name" placeholder="e.g. Anchor 25A MCB"></div>
+      <div class="form-group"><label>Item Code / Model</label><input type="text" id="m-code" placeholder="e.g. 21005"></div>
+      <div class="form-group" style="grid-column: span 2;"><label>Item Name *</label><input type="text" id="m-name" placeholder="e.g. Havells 16A Socket"></div>
     </div>
-    <div class="grid-3" style="margin-top:8px;">
+    
+    <div class="grid-3" style="margin-top:10px;">
       <div class="form-group"><label>HSN</label><input type="text" id="m-hsn" value="8536"></div>
-      <div class="form-group"><label>Unit</label><select id="m-unit"><option>Pcs</option><option>Meter</option></select></div>
-      <div class="form-group"><label>GST %</label><select id="m-gst"><option value="18">18%</option><option value="28">28%</option><option value="0">0%</option></select></div>
+      <div class="form-group"><label>Unit</label><select id="m-unit"><option>Pcs</option><option>Meter</option><option>Box</option><option>Kg</option></select></div>
+      <div class="form-group"><label>GST %</label><select id="m-gst"><option value="18">18%</option><option value="28">28%</option><option value="12">12%</option><option value="5">5%</option><option value="0">0%</option></select></div>
     </div>
-    <div class="grid-3" style="margin-top:8px;">
-      <div class="form-group"><label>Rate (Incl. Tax ₹)</label><input type="number" id="m-price" value="250"></div>
-      <div class="form-group"><label>Quantity</label><input type="number" id="m-qty" value="1"></div>
-      <div class="form-group"><label>Warranty</label><input type="number" id="m-warranty" value="12"></div>
+    
+    <div class="grid-3" style="margin-top:10px;">
+      <div class="form-group"><label>Purchase Price (₹)</label><input type="number" id="m-purchase" value="0"></div>
+      <div class="form-group"><label>Selling Price (Incl. Tax ₹) *</label><input type="number" id="m-price" placeholder="Rate"></div>
+      <div class="form-group"><label>Total Stock in Shop</label><input type="number" id="m-stock" value="10"></div>
     </div>
-    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+
+    <div class="grid-3" style="margin-top:10px;">
+      <div class="form-group"><label>Bill Qty *</label><input type="number" id="m-qty" value="1"></div>
+      <div class="form-group"><label>Serial / IMEI</label><input type="text" id="m-sn" placeholder="Optional"></div>
+      <div class="form-group"><label>Warranty (Months)</label><input type="number" id="m-warranty" value="12"></div>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px; padding-top:12px; border-top:1px solid #e2e8f0;">
       <button class="btn btn-outline" onclick="toggleManualItemModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="addManualToCart()">Add to Cart</button>
+      <button class="btn btn-success" onclick="addManualToCartAndCloud()"><i class="fa-solid fa-check"></i> Add to Cart & Save to Sheet</button>
     </div>
   </div>
 </div>
 
-<!-- Tally Print Modal (With Dynamic UPI QR Code) -->
+<!-- Tally Print Modal (Full Page Proportional Structure) -->
 <div id="print-modal">
   <div class="no-print" style="max-width:210mm; margin:10px auto; display:flex; justify-content:space-between;">
     <button class="btn btn-warning" onclick="closePrint()"><i class="fa-solid fa-arrow-left"></i> Back</button>
-    <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> 🖨️ Print Now (A4 / PDF)</button>
+    <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> 🖨 Print Now (A4 / PDF)</button>
   </div>
+  
   <div class="tally-invoice-wrap" id="invoice-printable">
     <div class="t-box">
-      <div class="t-header">
-        <div class="t-title" id="t-inv-title">TAX INVOICE</div>
-        <div class="t-company-name">SHRI DARIYAV ELECTRICALS AND DECORATION</div>
-        <div>DELHI GETA A ROAD RATHOR BHAWAN NAGAUR RAJ - 341001</div>
-        <div>Mob: +91 7726923489 7014248846 | GSTIN: 08JUSPS5893C1ZM</div>
-      </div>
-      <div class="t-row border-b">
-        <div class="t-col-6 border-r">
-          <div><strong>Billed To:</strong> <span id="t-cust-name"></span></div>
-          <div><strong>Phone:</strong> <span id="t-cust-phone"></span></div>
-          <div><strong>Address:</strong> <span id="t-cust-addr"></span></div>
+      
+      <!-- 1. HEADER SECTION (TOP) -->
+      <div>
+        <div class="t-header">
+          <div class="t-title" id="t-inv-title">TAX INVOICE</div>
+          <div class="t-company-name">SHRI DARIYAV ELECTRICALS AND DECORATION</div>
+          <div>DELHI GETA A ROAD RATHOR BHAWAN NAGAUR RAJ - 341001</div>
+          <div id="t-company-gst-row">Mob: +91 7726923489 7014248846 | GSTIN: 08JUSPS5893C1ZM</div>
         </div>
-        <div class="t-col-6">
-          <div><strong>Invoice No:</strong> <span id="t-inv-no">#1001</span></div>
-          <div><strong>Dated:</strong> <span id="t-inv-date"></span></div>
-          <div><strong>Mode of Pay:</strong> <span id="t-inv-pay"></span></div>
+        <div class="t-row border-b">
+          <div class="t-col-6 border-r">
+            <div><strong>Billed To:</strong> <span id="t-cust-name" style="font-weight:bold; font-size:12.5px;"></span></div>
+            <div id="t-cust-gstin-row" style="display:none;"><strong>Customer GSTIN:</strong> <span id="t-cust-gstin" style="font-weight:bold;"></span></div>
+            <div id="t-cust-pos-row" style="display:none;"><strong>Place of Supply:</strong> <span id="t-cust-pos">08-Rajasthan</span></div>
+            <div><strong>Phone:</strong> <span id="t-cust-phone"></span></div>
+            <div><strong>Address:</strong> <span id="t-cust-addr"></span></div>
+          </div>
+          <div class="t-col-6">
+            <div><strong>Invoice No:</strong> <span id="t-inv-no">#1001</span></div>
+            <div><strong>Dated:</strong> <span id="t-inv-date"></span></div>
+            <div><strong>Mode of Pay:</strong> <span id="t-inv-pay"></span></div>
+          </div>
         </div>
       </div>
-      <table class="t-table">
-        <thead>
-          <tr><th style="width:5%;">#</th><th style="width:12%;">Code</th><th style="width:35%; text-align:left;">Description</th><th style="width:10%;">HSN</th><th style="width:8%;">Qty</th><th style="width:10%;">Rate</th><th style="width:8%;">GST</th><th style="width:12%; text-align:right;">Amount (₹)</th></tr>
-        </thead>
-        <tbody id="t-items-body"></tbody>
-      </table>
-      <div id="t-tax-section" class="border-b" style="padding:6px;">
-        <table class="tax-breakup-table">
-          <thead><tr><th>HSN</th><th>Taxable (₹)</th><th>CGST %</th><th>CGST (₹)</th><th>SGST %</th><th>SGST (₹)</th><th>Total Tax (₹)</th></tr></thead>
-          <tbody id="t-tax-rows"></tbody>
+
+      <!-- 2. ITEM TABLE CONTAINER (DYNAMIC GST/ESTIMATE COLUMNS) -->
+      <div class="t-table-container">
+        <table class="t-table">
+          <thead id="t-thead-row"></thead>
+          <tbody id="t-items-body"></tbody>
         </table>
       </div>
-      <div class="t-row border-b">
-        <div class="t-col-6 border-r">
-          <div><strong>Amount (in words):</strong></div>
-          <div id="t-amt-words" style="font-weight:bold; font-style:italic;"></div>
+
+      <!-- 3. FOOTER SECTION (LOCKED AT BOTTOM) -->
+      <div>
+        <!-- GST Tax Breakup Section (Hidden for Estimate) -->
+        <div id="t-tax-section" class="border-b" style="padding:4px;">
+          <table class="tax-breakup-table">
+            <thead><tr><th>HSN</th><th>Taxable (₹)</th><th>CGST %</th><th>CGST (₹)</th><th>SGST %</th><th>SGST (₹)</th><th>Total Tax (₹)</th></tr></thead>
+            <tbody id="t-tax-rows"></tbody>
+          </table>
         </div>
-        <div class="t-col-6" style="text-align:right;">
-          <div>Sub Total (Taxable): ₹<span id="t-sum-sub">0.00</span></div>
-          <div id="t-row-cgst">CGST: ₹<span id="t-sum-cgst">0.00</span></div>
-          <div id="t-row-sgst">SGST: ₹<span id="t-sum-sgst">0.00</span></div>
-          <div style="font-size:16px; font-weight:bold; margin-top:4px;">Grand Total: ₹<span id="t-grand-total">0.00</span></div>
-        </div>
-      </div>
-      
-      <!-- Bank Details + Dynamic UPI QR Code + Signature -->
-      <div class="t-row">
-        <div class="t-col-6 border-r" style="font-size:11px; display:flex; gap:12px; align-items:center;">
-          <div>
-            <strong>Bank Details:</strong> HDFC BANK<br>
-            A/c No.: <strong>50200100228274</strong><br>
-            IFSC: <strong>HDFC0002037</strong><br>
-            UPI ID: <strong>7726923489-3@ybl</strong><br>
-            <small style="color:#555;">Warranty claims subject to authorized service center terms.</small>
+        <div class="t-row border-b">
+          <div class="t-col-6 border-r">
+            <div><strong>Amount (in words):</strong></div>
+            <div id="t-amt-words" style="font-weight:bold; font-style:italic;"></div>
           </div>
-          <!-- Dynamic UPI QR Code -->
-          <div style="text-align:center; padding-left:10px; border-left:1px dashed #ccc;">
-            <img id="t-upi-qr" src="" alt="UPI QR" style="width:85px; height:85px; border:1px solid #999; display:block; margin:auto;">
-            <span style="font-size:9px; font-weight:bold; color:#1e3a8a;">Scan & Pay GPay/PhonePe</span>
+          <div class="t-col-6" style="text-align:right;">
+            <div id="t-box-subtotal">Sub Total (Taxable): ₹<span id="t-sum-sub">0.00</span></div>
+            <div id="t-row-cgst">CGST: ₹<span id="t-sum-cgst">0.00</span></div>
+            <div id="t-row-sgst">SGST: ₹<span id="t-sum-sgst">0.00</span></div>
+            <div style="font-size:15px; font-weight:bold; margin-top:3px;">Grand Total: ₹<span id="t-grand-total">0.00</span></div>
           </div>
         </div>
-        <div class="t-col-6" style="text-align:right; display:flex; flex-direction:column; justify-content:space-between;">
-          <strong>For SHRI DARIYAV ELECTRICALS AND DECORATION</strong>
-          <div style="margin-top:45px; font-weight:bold;">Authorised Signatory</div>
+        
+        <!-- Bank Details + Dynamic UPI QR Code + Signature -->
+        <div class="t-row">
+          <div class="t-col-6 border-r" style="font-size:10.5px; display:flex; gap:10px; align-items:center;">
+            <div>
+              <strong>Bank Details:</strong> HDFC BANK<br>
+              A/c No.: <strong>50200100228274</strong><br>
+              IFSC: <strong>HDFC0002037</strong><br>
+              UPI ID: <strong>7726923489-3@ybl</strong><br>
+              <small style="color:#555;">Warranty claims subject to authorized service center terms.</small>
+            </div>
+            <div style="text-align:center; padding-left:8px; border-left:1px dashed #ccc;">
+              <img id="t-upi-qr" src="" alt="UPI QR" style="width:75px; height:75px; border:1px solid #999; display:block; margin:auto;">
+              <span style="font-size:8.5px; font-weight:bold; color:#1e3a8a;">Scan & Pay GPay/PhonePe</span>
+            </div>
+          </div>
+          <div class="t-col-6" style="text-align:right; display:flex; flex-direction:column; justify-content:space-between;">
+            <strong>For SHRI DARIYAV ELECTRICALS AND DECORATION</strong>
+            <div style="margin-top:35px; font-weight:bold;">Authorised Signatory</div>
+          </div>
         </div>
       </div>
 
@@ -351,7 +503,7 @@
 
 <script>
 // --- Updated Permanent Apps Script URL ---
-const PERMANENT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwH47sqMOJhCJxPhHiLLvt0gqym3_cnq36pVKMoiOmp3GyYjnHVyiQ8atXyjzKiJgMO/exec";
+const PERMANENT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyxV1GIqslQHvPDEXRSxHL1eHwp7l1wN8LkbVl0q_ktdDpHEAzlcP_DKN5OFgUipI1D/exec";
 
 // --- Shop UPI Configuration ---
 const SHOP_UPI_ID = "7726923489-3@ybl";
@@ -361,16 +513,93 @@ let stock = [];
 let invoices = JSON.parse(localStorage.getItem('nutun_invoices')) || [];
 let partyPayments = JSON.parse(localStorage.getItem('nutun_payments')) || [];
 let cart = [];
+let selectedDropdownIndex = -1;
 
 function init() {
-  renderStockDropdown();
-  renderStockTable();
   renderHistoryTable();
   renderPartySelect();
-  syncGoogleSheet(false);
+  syncAllData(false);
+  onBillTypeChange();
+  document.getElementById('pos-search-input').focus();
 }
 
-// Load Stock and Item Code from Google Sheet (Supports 8 Columns or 7 Columns)
+function onBillTypeChange() {
+  const isGst = document.querySelector('input[name="bill_type"]:checked').value === 'GST';
+  document.getElementById('group-cust-gstin').style.display = isGst ? '' : 'none';
+  updateCart();
+}
+
+// -------------------------------------------------------------
+// RELIABLE B2B GST LOOKUP (MEMORY FIRST -> SMART FALLBACK)
+// -------------------------------------------------------------
+function autoLookupGstin() {
+  const gstinInput = document.getElementById('cust-gstin');
+  const gstin = gstinInput.value.trim().toUpperCase();
+  gstinInput.value = gstin;
+
+  if (gstin.length !== 15) return;
+
+  const statusLabel = document.getElementById('gstin-status');
+  statusLabel.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Checking...';
+
+  const stateMap = {
+    "01":"Jammu & Kashmir","02":"Himachal Pradesh","03":"Punjab","04":"Chandigarh",
+    "05":"Uttarakhand","06":"Haryana","07":"Delhi","08":"Nagaur, Rajasthan","09":"Uttar Pradesh",
+    "10":"Bihar","19":"West Bengal","24":"Gujarat","27":"Maharashtra","29":"Karnataka"
+  };
+  const stCode = gstin.substring(0, 2);
+  const defaultState = stateMap[stCode] || "Rajasthan";
+
+  // 1. सबसे पहले अपनी निजी इनवॉइस मेमोरी में चेक करें
+  const existingInv = invoices.find(i => i.customer && i.customer.gstin && i.customer.gstin.toUpperCase() === gstin);
+  if (existingInv && existingInv.customer.name && existingInv.customer.name !== 'Cash Customer') {
+    document.getElementById('cust-name').value = existingInv.customer.name;
+    document.getElementById('cust-address').value = existingInv.customer.address || defaultState;
+    if (existingInv.customer.phone && existingInv.customer.phone !== '-') {
+      document.getElementById('cust-phone').value = existingInv.customer.phone;
+    }
+    statusLabel.innerHTML = '⚡ Found in Memory';
+    return;
+  }
+
+  // 2. Apps Script के ज़रिए चेक करें
+  fetch(PERMANENT_SCRIPT_URL + "?action=lookup_gstin&gstin=" + encodeURIComponent(gstin))
+    .then(r => r.json())
+    .then(resData => {
+      if (resData.status === "success" && resData.name) {
+        document.getElementById('cust-name').value = resData.name;
+        document.getElementById('cust-address').value = resData.address || defaultState;
+        statusLabel.innerHTML = '🌐 ' + resData.name.substring(0, 20);
+      } else {
+        if (document.getElementById('cust-name').value === 'Cash Customer') {
+          document.getElementById('cust-name').value = '';
+        }
+        document.getElementById('cust-address').value = defaultState;
+        statusLabel.innerHTML = 'State: ' + defaultState;
+        document.getElementById('cust-name').focus();
+        document.getElementById('cust-name').placeholder = 'Enter Firm Name (e.g. Shri Balaji Enterprises)';
+      }
+    })
+    .catch(() => {
+      if (document.getElementById('cust-name').value === 'Cash Customer') {
+        document.getElementById('cust-name').value = '';
+      }
+      document.getElementById('cust-address').value = defaultState;
+      statusLabel.innerHTML = 'State: ' + defaultState;
+      document.getElementById('cust-name').focus();
+    });
+}
+
+function openGovtGstPortal() {
+  window.open("https://services.gst.gov.in/services/searchtp", "_blank");
+}
+
+function syncAllData(showAlert = false) {
+  syncGoogleSheet(false);
+  loadInvoicesFromCloud(showAlert);
+}
+
+// Google Sheet से स्टॉक लोड करना
 function syncGoogleSheet(showAlert = false) {
   fetch(PERMANENT_SCRIPT_URL)
     .then(res => res.json())
@@ -380,7 +609,6 @@ function syncGoogleSheet(showAlert = false) {
         const r = rows[i];
         if (r && r.length >= 7) {
           let code = "", name = "", hsn = "", unit = "", purchase = 0, price = 0, gst = 18, stockQty = 0;
-          
           if (r.length >= 8) {
             code = String(r[0] || '').trim();
             name = String(r[1] || '').trim();
@@ -417,54 +645,132 @@ function syncGoogleSheet(showAlert = false) {
         }
       }
       localStorage.setItem('nutun_stock', JSON.stringify(stock));
-      renderStockDropdown();
       renderStockTable();
-      document.getElementById('sheet-sync-status').innerHTML = '<i class="fa-solid fa-circle-check"></i> Google Sheet Synced (' + stock.length + ' Items)';
-      if (showAlert) alert('Stock and item codes updated successfully from Google Sheet!');
+      document.getElementById('sheet-sync-status').innerHTML = '<i class="fa-solid fa-circle-check"></i> ' + stock.length + ' Items Ready';
     })
     .catch(err => {
-      document.getElementById('sheet-sync-status').innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color:#f59e0b;"></i> Offline Mode (Using Local Stock)';
+      document.getElementById('sheet-sync-status').innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color:#f59e0b;"></i> Offline Stock Active';
     });
 }
 
-function renderStockDropdown() {
-  const sel = document.getElementById('item-select');
-  sel.innerHTML = '<option value="">-- Choose Item from Stock --</option>';
-  stock.forEach(item => {
-    sel.innerHTML += `<option value="${item.id}">[${item.code || 'NO-CODE'}] ${item.name} (${item.stock} ${item.unit})</option>`;
+// इनवॉइस हिस्ट्री मर्ज
+function loadInvoicesFromCloud(showAlert = false) {
+  fetch(PERMANENT_SCRIPT_URL + "?action=get_invoices")
+    .then(res => res.json())
+    .then(cloudInvoices => {
+      if (Array.isArray(cloudInvoices)) {
+        let invoiceMap = {};
+        invoices.forEach(inv => { invoiceMap[inv.id] = inv; });
+        cloudInvoices.forEach(inv => { invoiceMap[inv.id] = inv; });
+
+        invoices = Object.values(invoiceMap);
+        invoices.sort((a,b) => b.id - a.id);
+
+        localStorage.setItem('nutun_invoices', JSON.stringify(invoices));
+        renderHistoryTable();
+        renderPartySelect();
+        if (showAlert) alert('Cloud invoice history updated across all devices!');
+      }
+    })
+    .catch(err => {
+      console.log("Using cached invoices.");
+    });
+}
+
+// POS Search
+function handlePosSearchInput(val) {
+  const query = val.trim().toLowerCase();
+  const dropdown = document.getElementById('pos-dropdown');
+  selectedDropdownIndex = -1;
+
+  if (!query) {
+    dropdown.style.display = 'none';
+    dropdown.innerHTML = '';
+    return;
+  }
+
+  const matches = stock.filter(s => 
+    s.code.toLowerCase().includes(query) || 
+    s.name.toLowerCase().includes(query)
+  ).slice(0, 8);
+
+  if (matches.length === 0) {
+    dropdown.innerHTML = '<div style="padding:10px; color:#94a3b8; font-size:13px;">No item found matching "' + val + '"</div>';
+    dropdown.style.display = 'block';
+    return;
+  }
+
+  dropdown.innerHTML = matches.map((m, idx) => `
+    <div class="pos-item-row" data-id="${m.id}" onclick="populateItemFields('${m.id}')">
+      <div>
+        <span class="pos-item-code">[${m.code || 'CODE'}]</span>
+        <span class="pos-item-name">${m.name}</span>
+        <div class="pos-item-meta">HSN: ${m.hsn} | Stock: ${m.stock} ${m.unit}</div>
+      </div>
+      <div class="pos-item-price">₹${m.price.toFixed(2)}</div>
+    </div>
+  `).join('');
+  dropdown.style.display = 'block';
+}
+
+function handlePosSearchKeydown(e) {
+  const dropdown = document.getElementById('pos-dropdown');
+  const rows = dropdown.querySelectorAll('.pos-item-row');
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (rows.length > 0) {
+      selectedDropdownIndex = (selectedDropdownIndex + 1) % rows.length;
+      updateDropdownSelection(rows);
+    }
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (rows.length > 0) {
+      selectedDropdownIndex = (selectedDropdownIndex - 1 + rows.length) % rows.length;
+      updateDropdownSelection(rows);
+    }
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (selectedDropdownIndex >= 0 && rows[selectedDropdownIndex]) {
+      const itemId = rows[selectedDropdownIndex].getAttribute('data-id');
+      populateItemFields(itemId);
+    } else if (rows.length > 0) {
+      const itemId = rows[0].getAttribute('data-id');
+      populateItemFields(itemId);
+    }
+  } else if (e.key === 'Escape') {
+    dropdown.style.display = 'none';
+  }
+}
+
+function updateDropdownSelection(rows) {
+  rows.forEach((r, idx) => {
+    r.classList.toggle('selected', idx === selectedDropdownIndex);
   });
 }
 
-function onItemChange() {
-  const id = document.getElementById('item-select').value;
-  const itm = stock.find(s => s.id == id);
-  if (itm) {
-    document.getElementById('item-price').value = itm.price;
-  }
+function populateItemFields(itemId) {
+  const itm = stock.find(s => s.id == itemId);
+  if (!itm) return;
+
+  document.getElementById('selected-item-id').value = itm.id;
+  document.getElementById('item-name-display').value = `[${itm.code}] ${itm.name}`;
+  document.getElementById('item-price').value = itm.price;
+  document.getElementById('item-qty').value = '1';
+  document.getElementById('item-serial').value = '';
+  document.getElementById('item-warranty').value = '12';
+
+  document.getElementById('pos-dropdown').style.display = 'none';
+  document.getElementById('pos-search-input').value = '';
+
+  document.getElementById('item-qty').focus();
+  document.getElementById('item-qty').select();
 }
 
-// Quick Search by Item Code / Model No. (Press Enter)
-function handleQuickCodeSearch(e) {
-  const q = document.getElementById('quick-code-search').value.trim().toLowerCase();
-  if (!q) return;
-
-  if (e.key === "Enter") {
-    const itm = stock.find(s => s.code.toLowerCase() === q || s.code.toLowerCase().includes(q) || s.name.toLowerCase().includes(q));
-    if (itm) {
-      document.getElementById('item-select').value = itm.id;
-      document.getElementById('item-price').value = itm.price;
-      document.getElementById('quick-code-search').value = '[' + itm.code + '] ' + itm.name;
-      document.getElementById('item-qty').focus();
-    } else {
-      alert("No product found matching code: " + q);
-    }
-  }
-}
-
-function addToCart() {
-  const id = document.getElementById('item-select').value;
-  const itm = stock.find(s => s.id == id);
-  if (!itm) return alert('Please select an item!');
+function addItemToCartFromInputs() {
+  const itemId = document.getElementById('selected-item-id').value;
+  const itm = stock.find(s => s.id == itemId);
+  if (!itm) return alert('Please search and select an item first!');
 
   const price = parseFloat(document.getElementById('item-price').value);
   const qty = parseFloat(document.getElementById('item-qty').value);
@@ -486,56 +792,34 @@ function addToCart() {
     warranty: war
   });
 
+  document.getElementById('selected-item-id').value = '';
+  document.getElementById('item-name-display').value = '';
+  document.getElementById('item-price').value = '';
+  document.getElementById('item-qty').value = '1';
   document.getElementById('item-serial').value = '';
-  document.getElementById('quick-code-search').value = '';
+  document.getElementById('item-warranty').value = '12';
+
   updateCart();
+  document.getElementById('pos-search-input').focus();
 }
 
-function toggleManualItemModal() {
-  const m = document.getElementById('manual-modal');
-  m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
-}
-
-function addManualToCart() {
-  const code = document.getElementById('m-code').value.trim() || 'MANUAL';
-  const name = document.getElementById('m-name').value.trim();
-  const hsn = document.getElementById('m-hsn').value.trim();
-  const unit = document.getElementById('m-unit').value;
-  const gst = parseFloat(document.getElementById('m-gst').value);
-  const price = parseFloat(document.getElementById('m-price').value);
-  const qty = parseFloat(document.getElementById('m-qty').value);
-  const war = parseInt(document.getElementById('m-warranty').value) || 0;
-
-  if (!name || price <= 0 || qty <= 0) return alert('Please enter valid details and rate!');
-
-  cart.push({
-    id: 'manual_' + Date.now(),
-    code: code,
-    name: name,
-    hsn: hsn,
-    unit: unit,
-    price: price,
-    qty: qty,
-    gst: gst,
-    sn: '-',
-    warranty: war
-  });
-
-  toggleManualItemModal();
+function removeCart(idx) {
+  cart.splice(idx, 1);
   updateCart();
+  document.getElementById('pos-search-input').focus();
 }
 
-function removeCart(idx) { cart.splice(idx, 1); updateCart(); }
-
-// Tax Back-Calculation (Inclusive Tax Logic)
 function updateCart() {
   const isGst = document.querySelector('input[name="bill_type"]:checked').value === 'GST';
   const tbody = document.querySelector('#cart-table tbody');
   tbody.innerHTML = '';
   
-  let totalSubtotal = 0;
-  let totalTax = 0;
-  let grandTotal = 0;
+  document.getElementById('th-taxable').style.display = isGst ? '' : 'none';
+  document.getElementById('th-gst').style.display = isGst ? '' : 'none';
+  document.getElementById('subtotal-row').style.display = isGst ? '' : 'none';
+  document.getElementById('gst-row').style.display = isGst ? '' : 'none';
+
+  let totalSubtotal = 0, totalTax = 0, grandTotal = 0;
 
   cart.forEach((c, idx) => {
     const taxRate = isGst ? c.gst : 0;
@@ -562,10 +846,10 @@ function updateCart() {
         <td>${c.warranty} Mo</td>
         <td>${c.qty} ${c.unit}</td>
         <td>₹${c.price.toFixed(2)}</td>
-        <td>₹${taxable.toFixed(2)}</td>
-        <td>${taxRate}%</td>
-        <td>₹${lineGrossTotal.toFixed(2)}</td>
-        <td><button class="btn btn-danger" style="padding:2px 6px; font-size:10px;" onclick="removeCart(${idx})"><i class="fa-solid fa-trash"></i></button></td>
+        ${isGst ? `<td>₹${taxable.toFixed(2)}</td>` : ''}
+        ${isGst ? `<td>${taxRate}%</td>` : ''}
+        <td><strong>₹${lineGrossTotal.toFixed(2)}</strong></td>
+        <td><button class="btn btn-danger" style="padding:3px 7px; font-size:11px;" onclick="removeCart(${idx})"><i class="fa-solid fa-trash"></i></button></td>
       </tr>
     `;
   });
@@ -573,19 +857,84 @@ function updateCart() {
   document.getElementById('cart-subtotal').innerText = '₹' + totalSubtotal.toFixed(2);
   document.getElementById('cart-tax').innerText = '₹' + totalTax.toFixed(2);
   document.getElementById('cart-total').innerText = '₹' + Math.round(grandTotal).toFixed(2);
-  document.getElementById('gst-row').style.display = isGst ? 'block' : 'none';
 }
 
-// Save Invoice & Sync with Google Sheet
+function toggleManualItemModal() {
+  const m = document.getElementById('manual-modal');
+  m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+}
+
+function addManualToCartAndCloud() {
+  const code = document.getElementById('m-code').value.trim() || ('ITM' + (stock.length + 1));
+  const name = document.getElementById('m-name').value.trim();
+  const hsn = document.getElementById('m-hsn').value.trim() || '8536';
+  const unit = document.getElementById('m-unit').value;
+  const gst = parseFloat(document.getElementById('m-gst').value);
+  const purchase = parseFloat(document.getElementById('m-purchase').value) || 0;
+  const price = parseFloat(document.getElementById('m-price').value);
+  const totalStock = parseFloat(document.getElementById('m-stock').value) || 10;
+  const qty = parseFloat(document.getElementById('m-qty').value);
+  const sn = document.getElementById('m-sn').value.trim() || '-';
+  const war = parseInt(document.getElementById('m-warranty').value) || 0;
+
+  if (!name || isNaN(price) || price <= 0 || isNaN(qty) || qty <= 0) {
+    return alert('Please enter valid Item Name, Price and Quantity!');
+  }
+
+  const newItemObj = {
+    code: code,
+    name: name,
+    hsn: hsn,
+    unit: unit,
+    purchase: purchase,
+    price: price,
+    gst: gst,
+    stock: totalStock
+  };
+
+  const localId = 'item_' + Date.now();
+  cart.push({
+    id: localId,
+    code: code,
+    name: name,
+    hsn: hsn,
+    unit: unit,
+    price: price,
+    qty: qty,
+    gst: gst,
+    sn: sn,
+    warranty: war
+  });
+
+  stock.push({ id: localId, ...newItemObj });
+  localStorage.setItem('nutun_stock', JSON.stringify(stock));
+  renderStockTable();
+
+  const addUrl = PERMANENT_SCRIPT_URL + "?action=add_item_to_sheet&item=" + encodeURIComponent(JSON.stringify(newItemObj));
+  fetch(addUrl, { mode: 'no-cors' }).then(() => {
+    console.log("New item permanently added to Google Sheet!");
+  });
+
+  document.getElementById('m-code').value = '';
+  document.getElementById('m-name').value = '';
+  document.getElementById('m-price').value = '';
+  document.getElementById('m-sn').value = '';
+  toggleManualItemModal();
+
+  updateCart();
+  document.getElementById('pos-search-input').focus();
+}
+
 function saveAndPrintInvoice() {
-  if (cart.length === 0) return alert('Cart is empty!');
+  if (cart.length === 0) return alert('Cart is empty! Search and add items first.');
   const isGst = document.querySelector('input[name="bill_type"]:checked').value === 'GST';
-  const name = document.getElementById('cust-name').value.trim();
+  const name = document.getElementById('cust-name').value.trim() || 'Cash Customer';
+  const gstin = document.getElementById('cust-gstin').value.trim();
   const phone = document.getElementById('cust-phone').value.trim();
   const addr = document.getElementById('cust-address').value.trim() || 'Nagaur';
   const pay = document.getElementById('cust-paymode').value;
 
-  const invId = invoices.length > 0 ? (invoices[invoices.length - 1].id + 1) : 1001;
+  const invId = invoices.length > 0 ? (Math.max(...invoices.map(i=>i.id)) + 1) : 1001;
   const invDate = new Date().toISOString().split('T')[0];
 
   let totalSubtotal = 0, totalTax = 0, grandTotal = 0;
@@ -609,21 +958,20 @@ function saveAndPrintInvoice() {
     const sItem = stock.find(s => s.id == c.id);
     if (sItem) sItem.stock -= c.qty;
 
-    return { 
-      ...c, 
-      taxRate, 
-      taxable, 
-      taxVal, 
-      total: lineGrossTotal 
-    };
+    return { ...c, taxRate, taxable, taxVal, total: lineGrossTotal };
   });
 
   const invoiceRecord = {
     id: invId,
-    type: isGst ? 'GST TAX INVOICE' : 'BILL OF SUPPLY / ESTIMATE',
+    type: isGst ? (gstin ? 'GST TAX INVOICE (B2B)' : 'GST TAX INVOICE (B2C)') : 'BILL OF SUPPLY / ESTIMATE',
     isGst: isGst,
     date: invDate,
-    customer: { name, phone, address: addr },
+    customer: { 
+      name: name, 
+      gstin: gstin,
+      phone: phone, 
+      address: addr 
+    },
     payMode: pay,
     subtotal: totalSubtotal,
     tax: totalTax,
@@ -631,23 +979,15 @@ function saveAndPrintInvoice() {
     items: itemsSnapshot
   };
 
-  invoices.push(invoiceRecord);
+  invoices.unshift(invoiceRecord);
   localStorage.setItem('nutun_invoices', JSON.stringify(invoices));
   localStorage.setItem('nutun_stock', JSON.stringify(stock));
 
-  // Sync to Google Sheet via GET request
   const syncUrl = PERMANENT_SCRIPT_URL + "?action=save_invoice&data=" + encodeURIComponent(JSON.stringify(invoiceRecord));
-  fetch(syncUrl, { mode: 'no-cors' })
-    .then(() => {
-      console.log("Google Sheet updated successfully!");
-    })
-    .catch(err => {
-      console.log("Google Sheet sync error:", err);
-    });
+  fetch(syncUrl, { mode: 'no-cors' });
 
   cart = [];
   updateCart();
-  renderStockDropdown();
   renderStockTable();
   renderHistoryTable();
   renderPartySelect();
@@ -662,10 +1002,26 @@ function switchTab(tab) {
   document.querySelectorAll('.nav-btn, .b-nav').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('onclick').includes(tab));
   });
+  if (tab === 'history') {
+    loadInvoicesFromCloud(false);
+  }
 }
 
+// -------------------------------------------------------------
+// PERFECT PRINT MODAL (GST B2B / B2C vs ESTIMATE)
+// -------------------------------------------------------------
 function showPrintModal(inv) {
-  document.getElementById('t-inv-title').innerText = inv.isGst ? "TAX INVOICE" : "BILL OF SUPPLY / ESTIMATE";
+  const isGst = inv.isGst;
+  const custGstin = inv.customer && inv.customer.gstin ? inv.customer.gstin.trim() : '';
+
+  document.getElementById('t-inv-title').innerText = isGst 
+    ? (custGstin ? "TAX INVOICE (B2B)" : "TAX INVOICE") 
+    : "BILL OF SUPPLY / ESTIMATE";
+
+  document.getElementById('t-company-gst-row').innerText = isGst 
+    ? "Mob: +91 7726923489 7014248846 | GSTIN: 08JUSPS5893C1ZM"
+    : "Mob: +91 7726923489 7014248846";
+
   document.getElementById('t-inv-no').innerText = '#' + inv.id;
   document.getElementById('t-inv-date').innerText = inv.date;
   document.getElementById('t-inv-pay').innerText = inv.payMode;
@@ -673,49 +1029,121 @@ function showPrintModal(inv) {
   document.getElementById('t-cust-phone').innerText = inv.customer.phone || '-';
   document.getElementById('t-cust-addr').innerText = inv.customer.address || '-';
 
+  const gstinRow = document.getElementById('t-cust-gstin-row');
+  const posRow = document.getElementById('t-cust-pos-row');
+  if (isGst && custGstin) {
+    gstinRow.style.display = 'block';
+    posRow.style.display = 'block';
+    document.getElementById('t-cust-gstin').innerText = custGstin;
+    
+    const stCode = custGstin.substring(0, 2);
+    document.getElementById('t-cust-pos').innerText = stCode + "-Rajasthan";
+  } else {
+    gstinRow.style.display = 'none';
+    posRow.style.display = 'none';
+  }
+
+  const thead = document.getElementById('t-thead-row');
+  if (isGst) {
+    thead.innerHTML = `
+      <tr>
+        <th style="width:5%;">#</th>
+        <th style="width:12%;">Code</th>
+        <th style="width:35%; text-align:left;">Description</th>
+        <th style="width:10%;">HSN</th>
+        <th style="width:8%;">Qty</th>
+        <th style="width:10%;">Rate</th>
+        <th style="width:8%;">GST</th>
+        <th style="width:12%; text-align:right;">Amount (₹)</th>
+      </tr>
+    `;
+  } else {
+    thead.innerHTML = `
+      <tr>
+        <th style="width:6%;">#</th>
+        <th style="width:14%;">Code</th>
+        <th style="width:50%; text-align:left;">Description</th>
+        <th style="width:10%;">Qty</th>
+        <th style="width:10%;">Rate (₹)</th>
+        <th style="width:10%; text-align:right;">Amount (₹)</th>
+      </tr>
+    `;
+  }
+
   const tBody = document.getElementById('t-items-body');
   tBody.innerHTML = '';
   let hsnMap = {};
 
   inv.items.forEach((it, idx) => {
-    tBody.innerHTML += `
-      <tr>
-        <td style="text-align:center;">${idx + 1}</td>
-        <td style="text-align:center; font-weight:bold;">${it.code || '-'}</td>
-        <td><strong>${it.name}</strong><br><small>${it.sn !== '-' ? 'SN: ' + it.sn + ' | ' : ''}Warranty: ${it.warranty} Mo</small></td>
-        <td style="text-align:center;">${it.hsn || '-'}</td>
-        <td style="text-align:center;">${it.qty} ${it.unit}</td>
-        <td style="text-align:right;">${it.price.toFixed(2)}</td>
-        <td style="text-align:center;">${it.taxRate}%</td>
-        <td style="text-align:right;">${it.total.toFixed(2)}</td>
-      </tr>
-    `;
-    const hsn = it.hsn || '8500';
-    if (!hsnMap[hsn]) hsnMap[hsn] = { taxable: 0, taxRate: it.taxRate, taxAmt: 0 };
-    hsnMap[hsn].taxable += it.taxable;
-    hsnMap[hsn].taxAmt += it.taxVal;
+    if (isGst) {
+      tBody.innerHTML += `
+        <tr class="item-row">
+          <td style="text-align:center;">${idx + 1}</td>
+          <td style="text-align:center; font-weight:bold;">${it.code || '-'}</td>
+          <td><strong>${it.name}</strong><br><small>${it.sn !== '-' ? 'SN: ' + it.sn + ' | ' : ''}Warranty: ${it.warranty} Mo</small></td>
+          <td style="text-align:center;">${it.hsn || '-'}</td>
+          <td style="text-align:center;">${it.qty} ${it.unit}</td>
+          <td style="text-align:right;">${it.price.toFixed(2)}</td>
+          <td style="text-align:center;">${it.taxRate}%</td>
+          <td style="text-align:right;">${it.total.toFixed(2)}</td>
+        </tr>
+      `;
+      const hsn = it.hsn || '8536';
+      if (!hsnMap[hsn]) hsnMap[hsn] = { taxable: 0, taxRate: it.taxRate, taxAmt: 0 };
+      hsnMap[hsn].taxable += it.taxable;
+      hsnMap[hsn].taxAmt += it.taxVal;
+    } else {
+      tBody.innerHTML += `
+        <tr class="item-row">
+          <td style="text-align:center;">${idx + 1}</td>
+          <td style="text-align:center; font-weight:bold;">${it.code || '-'}</td>
+          <td><strong>${it.name}</strong><br><small>${it.sn !== '-' ? 'SN: ' + it.sn + ' | ' : ''}Warranty: ${it.warranty} Mo</small></td>
+          <td style="text-align:center;">${it.qty} ${it.unit}</td>
+          <td style="text-align:right;">${it.price.toFixed(2)}</td>
+          <td style="text-align:right;">${it.total.toFixed(2)}</td>
+        </tr>
+      `;
+    }
   });
 
-  document.getElementById('t-sum-sub').innerText = inv.subtotal.toFixed(2);
-  document.getElementById('t-sum-cgst').innerText = (inv.tax / 2).toFixed(2);
-  document.getElementById('t-sum-sgst').innerText = (inv.tax / 2).toFixed(2);
-  document.getElementById('t-grand-total').innerText = inv.grandTotal.toFixed(2);
+  const colSpanCount = isGst ? 8 : 6;
+  tBody.innerHTML += `
+    <tr class="blank-fill-row" style="height: 100%;">
+      ${Array(colSpanCount).fill('<td></td>').join('')}
+    </tr>
+  `;
 
   const taxSec = document.getElementById('t-tax-section');
-  if (inv.isGst) {
+  const subtotalBox = document.getElementById('t-box-subtotal');
+  const cgstRow = document.getElementById('t-row-cgst');
+  const sgstRow = document.getElementById('t-row-sgst');
+
+  if (isGst) {
     taxSec.style.display = 'block';
+    subtotalBox.style.display = 'block';
+    cgstRow.style.display = 'block';
+    sgstRow.style.display = 'block';
+
     const taxRows = document.getElementById('t-tax-rows');
     taxRows.innerHTML = '';
     for (let k in hsnMap) {
       const h = hsnMap[k];
       taxRows.innerHTML += `<tr><td>${k}</td><td>₹${h.taxable.toFixed(2)}</td><td>${h.taxRate / 2}%</td><td>₹${(h.taxAmt / 2).toFixed(2)}</td><td>${h.taxRate / 2}%</td><td>₹${(h.taxAmt / 2).toFixed(2)}</td><td>₹${h.taxAmt.toFixed(2)}</td></tr>`;
     }
+
+    document.getElementById('t-sum-sub').innerText = inv.subtotal.toFixed(2);
+    document.getElementById('t-sum-cgst').innerText = (inv.tax / 2).toFixed(2);
+    document.getElementById('t-sum-sgst').innerText = (inv.tax / 2).toFixed(2);
   } else {
     taxSec.style.display = 'none';
+    subtotalBox.style.display = 'none';
+    cgstRow.style.display = 'none';
+    sgstRow.style.display = 'none';
   }
+
+  document.getElementById('t-grand-total').innerText = inv.grandTotal.toFixed(2);
   document.getElementById('t-amt-words').innerText = numberToWords(inv.grandTotal) + ' Rupees Only';
 
-  // Dynamic UPI QR Code Generation
   const upiUrl = `upi://pay?pa=${SHOP_UPI_ID}&pn=${encodeURIComponent(SHOP_NAME)}&am=${inv.grandTotal.toFixed(2)}&cu=INR&tn=Invoice%20${inv.id}`;
   const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiUrl)}`;
   document.getElementById('t-upi-qr').src = qrApiUrl;
@@ -723,13 +1151,17 @@ function showPrintModal(inv) {
   document.getElementById('print-modal').style.display = 'block';
 }
 
-function closePrint() { document.getElementById('print-modal').style.display = 'none'; }
+function closePrint() { 
+  document.getElementById('print-modal').style.display = 'none'; 
+  document.getElementById('pos-search-input').focus();
+}
 
 function renderHistoryTable() {
   const tbody = document.getElementById('history-rows');
   tbody.innerHTML = '';
-  [...invoices].reverse().forEach(inv => {
-    tbody.innerHTML += `<tr><td>#${inv.id}</td><td>${inv.isGst ? 'GST' : 'Estimate'}</td><td>${inv.date}</td><td>${inv.customer.name}</td><td>${inv.payMode}</td><td>₹${inv.grandTotal}</td><td><button class="btn btn-warning" style="padding:2px 6px; font-size:11px;" onclick="showPrintModal(invoices.find(i=>i.id===${inv.id}))">Re-Print</button></td></tr>`;
+  invoices.forEach(inv => {
+    const custGstin = (inv.customer && inv.customer.gstin) ? inv.customer.gstin : '-';
+    tbody.innerHTML += `<tr><td>#${inv.id}</td><td>${inv.isGst ? 'GST' : 'Estimate'}</td><td>${inv.date}</td><td>${inv.customer.name}</td><td><strong>${custGstin}</strong></td><td>${inv.payMode}</td><td>₹${inv.grandTotal}</td><td><button class="btn btn-warning" style="padding:2px 6px; font-size:11px;" onclick="showPrintModal(invoices.find(i=>i.id===${inv.id}))">Re-Print</button></td></tr>`;
   });
 }
 
@@ -756,15 +1188,15 @@ function loadPartyLedger() {
   const partyBills = invoices.filter(i => i.customer.name === partyName && i.payMode === 'Credit');
   const partyRecs = partyPayments.filter(p => p.party === partyName);
   let txns = [];
-  partyBills.forEach(b => txns.push({ date: b.date, type: 'Credit Bill', ref: '#' + b.id, debit: b.grandTotal, credit: 0 }));
-  partyRecs.forEach(r => txns.push({ date: r.date, type: 'Payment In', ref: r.ref, debit: 0, credit: r.amount }));
+  partyBills.forEach(b => txns.push({ date: b.date, type: 'Credit Bill', mode: '-', ref: '#' + b.id, debit: b.grandTotal, credit: 0 }));
+  partyRecs.forEach(r => txns.push({ date: r.date, type: 'Payment In', mode: r.mode || 'Cash', ref: r.ref + (r.note ? ' (' + r.note + ')' : ''), debit: 0, credit: r.amount }));
   txns.sort((a,b) => new Date(a.date) - new Date(b.date));
   const tb = document.querySelector('#party-txn-table tbody');
   tb.innerHTML = '';
   let balance = 0;
   txns.forEach(t => {
     balance += (t.debit - t.credit);
-    tb.innerHTML += `<tr><td>${t.date}</td><td>${t.type}</td><td>${t.ref}</td><td style="color:#dc2626;">₹${t.debit}</td><td style="color:#16a34a;">₹${t.credit}</td><td><strong>₹${balance}</strong></td></tr>`;
+    tb.innerHTML += `<tr><td>${t.date}</td><td>${t.type}</td><td><strong>${t.mode}</strong></td><td>${t.ref}</td><td style="color:#dc2626;">₹${t.debit}</td><td style="color:#16a34a;">₹${t.credit}</td><td><strong>₹${balance}</strong></td></tr>`;
   });
   document.getElementById('party-net-balance').innerText = 'Net Balance: ₹' + balance.toFixed(2);
 }
@@ -772,16 +1204,28 @@ function loadPartyLedger() {
 function receivePayment() {
   const party = document.getElementById('ledger-party-select').value;
   const amt = parseFloat(document.getElementById('rec-amount').value);
+  const mode = document.getElementById('rec-mode').value;
+  const note = document.getElementById('rec-note').value.trim();
+
   if (!party || !amt || amt <= 0) return alert('Please enter a valid amount!');
-  partyPayments.push({ party: party, amount: amt, date: new Date().toISOString().split('T')[0], ref: 'REC-' + Math.floor(1000 + Math.random() * 9000) });
+
+  partyPayments.push({ 
+    party: party, 
+    amount: amt, 
+    mode: mode, 
+    note: note, 
+    date: new Date().toISOString().split('T')[0], 
+    ref: 'REC-' + Math.floor(1000 + Math.random() * 9000) 
+  });
   localStorage.setItem('nutun_payments', JSON.stringify(partyPayments));
   document.getElementById('rec-amount').value = '';
+  document.getElementById('rec-note').value = '';
   loadPartyLedger();
-  alert('Payment received successfully!');
+  alert('Payment of ₹' + amt + ' recorded successfully via ' + mode + '!');
 }
 
 function numberToWords(num) {
-  const a = ['','One ','Two ','Three ','Four ', 'Five ','Six ','Seven ','Eight ','Nine ','Ten ','Eleven ','Twelve ','Thirteen ','Fourteen ','Fifteen ','Sixteen ','Seventeen ','Eighteen ','Nineteen '];
+  const a = ['','One ','Two ','Three ','Four ', 'Five ','Six ','Senior ','Eight ','Nine ','Ten ','Eleven ','Twelve ','Thirteen ','Fourteen ','Fifteen ','Sixteen ','Seventeen ','Eighteen ','Nineteen '];
   const b = ['', '', 'Twenty','Thirty','Forty','Fifty', 'Sixty','Seventy','Eighty','Ninety'];
   if ((num = num.toString()).length > 9) return 'Overflow';
   let n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
@@ -794,6 +1238,13 @@ function numberToWords(num) {
   str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) : '';
   return str;
 }
+
+document.addEventListener('click', function(e) {
+  const searchWrap = document.querySelector('.pos-search-wrapper');
+  if (searchWrap && !searchWrap.contains(e.target)) {
+    document.getElementById('pos-dropdown').style.display = 'none';
+  }
+});
 
 window.onload = init;
 </script>
