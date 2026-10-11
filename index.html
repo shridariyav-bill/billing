@@ -31,7 +31,7 @@
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
     .grid-5 { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr 1fr auto; gap: 10px; align-items: flex-end; }
-    .grid-pur { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr auto; gap: 8px; align-items: flex-end; }
+    .grid-pur { display: grid; grid-template-columns: 2.5fr 1.2fr 1fr 1.2fr 1.2fr auto; gap: 10px; align-items: flex-end; }
     .form-group { display: flex; flex-direction: column; gap: 4px; position: relative; }
     label { font-size: 0.82rem; font-weight: 600; color: #475569; }
     input, select { padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; width: 100%; outline: none; }
@@ -47,7 +47,6 @@
     .data-table th, .data-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.88rem; }
     .data-table th { background: #f8fafc; font-weight: 600; }
 
-    /* Tab switcher for Invoice History & Ledgers */
     .tab-toggle-bar { display: flex; gap: 8px; margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
     .tab-toggle-btn { background: none; border: none; font-size: 0.95rem; font-weight: 600; color: #64748b; padding: 6px 14px; cursor: pointer; border-radius: 6px; }
     .tab-toggle-btn.active { background: var(--primary-light); color: white; }
@@ -72,7 +71,7 @@
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 2000; align-items: center; justify-content: center; padding: 15px; overflow-y: auto; }
     .modal-content-box { background: white; border-radius: 10px; width: 750px; max-width: 95%; max-height: 90vh; overflow-y: auto; padding: 22px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
 
-    /* Compact Multi-Page A4 Invoice */
+    /* TALLY & BUSY EXACT STANDARD INVOICE PRINT SPECIFICATIONS */
     #print-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2500; overflow-y: auto; padding: 15px; }
     .invoice-page { 
       background: white; 
@@ -81,9 +80,9 @@
       margin: 0 auto 15px auto; 
       padding: 6mm; 
       color: #000; 
-      font-family: 'Arial', sans-serif; 
-      font-size: 10px; 
-      line-height: 1.2; 
+      font-family: Arial, Helvetica, sans-serif; 
+      font-size: 11.5px; 
+      line-height: 1.25; 
       box-sizing: border-box; 
       page-break-after: always;
       display: flex;
@@ -93,20 +92,23 @@
     }
     .invoice-page:last-child { page-break-after: auto; }
     .t-header { text-align: center; border-bottom: 1.5px solid #000; padding: 4px; flex-shrink: 0; }
-    .t-title { font-size: 13px; font-weight: bold; letter-spacing: 1px; }
-    .t-company-name { font-size: 16px; font-weight: 900; margin: 2px 0; }
+    .t-title { font-size: 16px; font-weight: bold; letter-spacing: 1px; }
+    .t-company-name { font-size: 19px; font-weight: 900; margin: 2px 0; }
+    .t-company-address { font-size: 11px; }
     .t-row { display: flex; width: 100%; flex-shrink: 0; }
     .t-col-6 { width: 50%; padding: 4px; box-sizing: border-box; }
+    .t-cust-name { font-size: 13.5px; font-weight: bold; }
     .border-b { border-bottom: 1.5px solid #000; }
     .border-r { border-right: 1.5px solid #000; }
     
     .t-table { width: 100%; border-collapse: collapse; margin-top: 0; }
-    .t-table th { border-bottom: 1.5px solid #000; border-right: 1px solid #000; padding: 4px 3px; font-size: 9.5px; background: #fafafa; }
-    .t-table td { border-right: 1px solid #000; border-bottom: 1px solid #e2e8f0; padding: 3px 4px; font-size: 9.5px; }
+    .t-table th { border-bottom: 1.5px solid #000; border-right: 1px solid #000; padding: 4px 3px; font-size: 11.5px; font-weight: bold; background: #fafafa; }
+    .t-table td { border-right: 1px solid #000; border-bottom: 1px solid #e2e8f0; padding: 3px 4px; font-size: 11.5px; font-weight: normal; }
     .t-table th:last-child, .t-table td:last-child { border-right: none; }
     
     .tax-breakup-table { width: 100%; border-collapse: collapse; margin-top: 2px; }
-    .tax-breakup-table th, .tax-breakup-table td { border: 1px solid #000; padding: 2px 3px; text-align: center; font-size: 9px; }
+    .tax-breakup-table th, .tax-breakup-table td { border: 1px solid #000; padding: 2px 3px; text-align: center; font-size: 10px; }
+    .t-grand-total { font-size: 16px; font-weight: bold; }
 
     @media print {
       html, body { width: 210mm !important; margin: 0 !important; padding: 0 !important; background: #fff !important; }
@@ -245,8 +247,8 @@
           <div class="form-group"><label>Selected Item</label><input type="text" id="item-name-display" placeholder="Item Name" readonly style="background:#e2e8f0; font-weight:600;"><input type="hidden" id="selected-item-id"></div>
           <div class="form-group"><label>Rate (₹)</label><input type="number" id="item-price" min="0" step="any" placeholder="Price"></div>
           <div class="form-group"><label>Qty</label><input type="number" id="item-qty" value="1" min="0.1" step="any" onkeydown="if(event.key==='Enter') document.getElementById('item-serial').focus()"></div>
-          <div class="form-group"><label>Serial / IMEI</label><input type="text" id="item-serial" placeholder="SN / IMEI" onkeydown="if(event.key==='Enter') document.getElementById('item-warranty').focus()"></div>
-          <div class="form-group"><label>Warranty (Mo)</label><input type="number" id="item-warranty" value="12" onkeydown="if(event.key==='Enter') addItemToCartFromInputs()"></div>
+          <div class="form-group"><label>Serial / IMEI (Optional)</label><input type="text" id="item-serial" placeholder="Leave empty if none" onkeydown="if(event.key==='Enter') document.getElementById('item-warranty').focus()"></div>
+          <div class="form-group"><label>Warranty (0 if none)</label><input type="number" id="item-warranty" value="0" placeholder="0" onkeydown="if(event.key==='Enter') addItemToCartFromInputs()"></div>
           <div class="form-group"><button class="btn btn-primary" onclick="addItemToCartFromInputs()" style="height: 38px;"><i class="fa-solid fa-plus"></i> Add</button></div>
         </div>
 
@@ -273,14 +275,17 @@
       </div>
     </section>
 
-    <!-- 2. PURCHASE ENTRY WITH GST% & HSN INPUT -->
+    <!-- 2. PURCHASE ENTRY (CLEAN SCREEN - NO GST SLAB ON ENTRY, DIRECT "+ CREATE NEW ITEM" BUTTON) -->
     <section id="tab-purchase" style="display:none;">
       <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
           <h2 id="pur-mode-title"><i class="fa-solid fa-cart-flatbed" style="color:#16a34a;"></i> Inward Stock & Purchase Entry</h2>
-          <span id="pur-editing-badge" style="font-size:12px; color:#2563eb; font-weight:bold;"></span>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <button class="btn btn-primary" onclick="toggleManualItemModal()"><i class="fa-solid fa-plus"></i> + Create New Item</button>
+            <span id="pur-editing-badge" style="font-size:12px; color:#2563eb; font-weight:bold;"></span>
+          </div>
         </div>
-        <p style="font-size:0.85rem; color:#64748b; margin-bottom:14px;">Record inward purchases with full GST/HSN details. Automatically updates cloud stock and supplier ledgers.</p>
+        <p style="font-size:0.85rem; color:#64748b; margin-bottom:14px;">Record inward purchases cleanly. GST is linked automatically from Item Master.</p>
         <div class="grid-4">
           <div class="form-group"><label>Supplier / Wholesaler Name</label><input type="text" id="pur-supplier" placeholder="e.g. Havells / Cash"></div>
           <div class="form-group"><label>Supplier Bill / Ref No.</label><input type="text" id="pur-ref" placeholder="Bill # 1245"></div>
@@ -296,40 +301,30 @@
         </div>
         <div class="form-group" style="margin-top:10px;">
           <label>Purchase Remark / Note (Independent)</label>
-          <input type="text" id="pur-remark" placeholder="Transport charges, payment terms, delivery notes...">
+          <input type="text" id="pur-remark" placeholder="Transport freight, terms, delivery notes...">
         </div>
       </div>
 
       <div class="card">
-        <h4>Add Purchased Items to Stock</h4>
+        <h4>Select Item & Quantity to Inward</h4>
         <div class="pos-search-wrapper" style="margin: 10px 0;">
-          <label style="font-size: 0.85rem; font-weight: 700; color: #16a34a;">Search Existing Item or Add New:</label>
+          <label style="font-size: 0.85rem; font-weight: 700; color: #16a34a;">Search Item by Code or Name:</label>
           <input type="text" id="pur-search-input" placeholder="Type item code or name..." oninput="handlePurSearchInput(this.value)">
           <div id="pur-dropdown" class="pos-dropdown"></div>
         </div>
 
+        <!-- Clean Grid: No GST Slab on Billing -->
         <div class="grid-pur" style="background:#f0fdf4; padding:12px; border-radius:8px; border:1px solid #bbf7d0;">
           <div class="form-group"><label>Item Name *</label><input type="text" id="pur-item-name" placeholder="Item Name"></div>
           <div class="form-group"><label>Code / Model</label><input type="text" id="pur-item-code" placeholder="Code"></div>
-          <div class="form-group"><label>HSN Code</label><input type="text" id="pur-item-hsn" value="8536"></div>
           <div class="form-group"><label>Inward Qty (+)</label><input type="number" id="pur-item-qty" value="10"></div>
-          <div class="form-group"><label>Cost Rate (₹)</label><input type="number" id="pur-item-cost" placeholder="Purchase Cost"></div>
-          <div class="form-group"><label>Selling Rate (₹)</label><input type="number" id="pur-item-price" placeholder="Selling Rate"></div>
-          <div class="form-group">
-            <label>GST %</label>
-            <select id="pur-item-gst">
-              <option value="18">18%</option>
-              <option value="28">28%</option>
-              <option value="12">12%</option>
-              <option value="5">5%</option>
-              <option value="0">0%</option>
-            </select>
-          </div>
-          <div class="form-group"><button class="btn btn-success" onclick="addPurchaseRow()" style="height:38px;"><i class="fa-solid fa-plus"></i> Add</button></div>
+          <div class="form-group"><label>Cost Rate (₹)</label><input type="number" id="pur-item-cost" placeholder="Cost per pc"></div>
+          <div class="form-group"><label>New Selling Rate (₹)</label><input type="number" id="pur-item-price" placeholder="Selling Rate"></div>
+          <div class="form-group"><button class="btn btn-success" onclick="addPurchaseRow()" style="height:38px;"><i class="fa-solid fa-plus"></i> Add Item</button></div>
         </div>
 
         <table class="data-table" id="purchase-table" style="margin-top:15px;">
-          <thead><tr><th>#</th><th>Code</th><th>Item Name</th><th>HSN</th><th>Qty</th><th>Cost Rate</th><th>Selling Rate</th><th>GST %</th><th>Total (₹)</th><th>Action</th></tr></thead>
+          <thead><tr><th>#</th><th>Code</th><th>Item Name</th><th>Qty</th><th>Cost Rate</th><th>Selling Rate</th><th>Total (₹)</th><th>Action</th></tr></thead>
           <tbody></tbody>
         </table>
 
@@ -361,7 +356,6 @@
             </div>
           </div>
 
-          <!-- Date Range Filter Box for Sales -->
           <div style="display:flex; gap:12px; align-items:flex-end; background:#f8fafc; padding:12px; border-radius:8px; border:1px solid var(--border); flex-wrap:wrap; margin-bottom:12px;">
             <div class="form-group" style="width:160px;"><label>From Date:</label><input type="date" id="filter-sales-from"></div>
             <div class="form-group" style="width:160px;"><label>To Date:</label><input type="date" id="filter-sales-to"></div>
@@ -383,7 +377,6 @@
             <button class="btn btn-success" onclick="exportPurchasesToExcel()"><i class="fa-solid fa-file-excel"></i> 📊 Export Purchases to Excel</button>
           </div>
 
-          <!-- Date Range Filter Box for Purchases -->
           <div style="display:flex; gap:12px; align-items:flex-end; background:#f0fdf4; padding:12px; border-radius:8px; border:1px solid #bbf7d0; flex-wrap:wrap; margin-bottom:12px;">
             <div class="form-group" style="width:160px;"><label>From Date:</label><input type="date" id="filter-pur-from"></div>
             <div class="form-group" style="width:160px;"><label>To Date:</label><input type="date" id="filter-pur-to"></div>
@@ -401,7 +394,7 @@
       </div>
     </section>
 
-    <!-- 4. TWO-WAY PARTY LEDGER (CUSTOMER + SUPPLIER KHATA) -->
+    <!-- 4. TWO-WAY PARTY LEDGER (CUSTOMER + SUPPLIER KHATA WITH DATE PICKER, FILTER & STATEMENT PRINT) -->
     <section id="tab-ledger" style="display:none;">
       <div class="card">
         <div class="tab-toggle-bar">
@@ -418,17 +411,30 @@
       <div class="card" id="ledger-details-box" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
           <h3 id="ledger-box-title">Transaction History</h3>
-          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-            <input type="number" id="rec-amount" placeholder="Amount (₹)" style="width:130px;">
-            <select id="rec-mode" style="width:130px;">
-              <option value="Cash">Cash</option>
-              <option value="UPI">UPI / GPay</option>
-              <option value="Bank">Bank Transfer</option>
-            </select>
-            <input type="text" id="rec-note" placeholder="Ref / Note" style="width:130px;">
-            <button class="btn btn-success" id="btn-ledger-action" onclick="saveCloudLedgerTransaction()"><i class="fa-solid fa-check"></i> Post Payment</button>
-          </div>
+          <button class="btn btn-warning" onclick="printLedgerStatement()"><i class="fa-solid fa-print"></i> 🖨️ Print Ledger Statement</button>
         </div>
+
+        <!-- Ledger Filter Bar -->
+        <div style="display:flex; gap:10px; align-items:flex-end; background:#f8fafc; padding:10px; border-radius:6px; border:1px solid var(--border); flex-wrap:wrap; margin-bottom:12px;">
+          <div class="form-group" style="width:140px;"><label>From Date:</label><input type="date" id="filter-ledger-from"></div>
+          <div class="form-group" style="width:140px;"><label>To Date:</label><input type="date" id="filter-ledger-to"></div>
+          <button class="btn btn-primary" onclick="loadPartyLedger()"><i class="fa-solid fa-filter"></i> Filter</button>
+          <button class="btn btn-outline" onclick="document.getElementById('filter-ledger-from').value=''; document.getElementById('filter-ledger-to').value=''; loadPartyLedger();"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+        </div>
+
+        <!-- Post Payment Box with Custom Date Picker -->
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; background:#fef3c7; padding:10px; border-radius:6px; margin-bottom:12px;">
+          <input type="date" id="rec-date" style="width:140px;">
+          <input type="number" id="rec-amount" placeholder="Amount (₹)" style="width:130px;">
+          <select id="rec-mode" style="width:130px;">
+            <option value="Cash">Cash</option>
+            <option value="UPI">UPI / GPay</option>
+            <option value="Bank">Bank Transfer</option>
+          </select>
+          <input type="text" id="rec-note" placeholder="Ref / Note" style="width:140px;">
+          <button class="btn btn-success" id="btn-ledger-action" onclick="saveCloudLedgerTransaction()"><i class="fa-solid fa-check"></i> Post Payment</button>
+        </div>
+
         <table class="data-table" id="party-txn-table">
           <thead><tr><th>Date</th><th>Type</th><th>Ref / Mode</th><th>Notes</th><th>Debit (+)</th><th>Credit (-)</th><th>Balance</th></tr></thead>
           <tbody></tbody>
@@ -453,8 +459,8 @@
       <div class="card" style="text-align:center; padding:40px 20px;">
         <div style="font-size:45px; color:#2563eb; margin-bottom:15px;"><i class="fa-solid fa-cloud-arrow-up"></i></div>
         <h2>Central Cloud Data Sync</h2>
-        <p style="color:#64748b; margin:10px auto 25px auto; max-width:500px;">Synchronize inventory stock, inward purchases, invoices, and ledgers in one place.</p>
-        <button class="btn btn-success" style="padding:12px 28px; font-size:1rem;" onclick="syncAllData(true)"><i class="fa-solid fa-rotate"></i> 🔄 Sync All Data Now</button>
+        <p style="color:#64748b; margin:10px auto 25px auto; max-width:500px;">Direct live connection with Google Sheet. No browser cache or stored local copies.</p>
+        <button class="btn btn-success" style="padding:12px 28px; font-size:1rem;" onclick="syncAllData(true)"><i class="fa-solid fa-rotate"></i> 🔄 Sync All Live Records Now</button>
         <div id="sync-central-status" style="margin-top:20px; font-size:14px; color:#16a34a; font-weight:600;"></div>
       </div>
     </section>
@@ -502,35 +508,39 @@
   </div>
 </div>
 
-<!-- Modal for Adding Unlisted Item -->
+<!-- Modal for Adding / Creating Master Item -->
 <div id="manual-modal" class="modal-overlay">
   <div class="modal-content-box">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <h3 style="color:var(--primary); margin:0;">Add Unlisted Item</h3>
+      <h3 style="color:var(--primary); margin:0;">Create New Item (Master List)</h3>
       <button onclick="toggleManualItemModal()" style="background:none; border:none; font-size:18px; cursor:pointer;">✕</button>
     </div>
     <div class="grid-3">
-      <div class="form-group"><label>Code</label><input type="text" id="m-code" placeholder="e.g. 21005"></div>
-      <div class="form-group" style="grid-column: span 2;"><label>Name *</label><input type="text" id="m-name" placeholder="Item Name"></div>
+      <div class="form-group"><label>Item Code *</label><input type="text" id="m-code" placeholder="e.g. 21005"></div>
+      <div class="form-group" style="grid-column: span 2;"><label>Item Name *</label><input type="text" id="m-name" placeholder="Item Name"></div>
     </div>
     <div class="grid-3" style="margin-top:10px;">
-      <div class="form-group"><label>HSN</label><input type="text" id="m-hsn" value="8536"></div>
+      <div class="form-group"><label>HSN Code</label><input type="text" id="m-hsn" value="8536"></div>
       <div class="form-group"><label>Unit</label><select id="m-unit"><option>Pcs</option><option>Meter</option><option>Box</option></select></div>
-      <div class="form-group"><label>GST %</label><select id="m-gst"><option value="18">18%</option><option value="28">28%</option><option value="12">12%</option><option value="5">5%</option><option value="0">0%</option></select></div>
+      <div class="form-group">
+        <label>GST % Slab</label>
+        <select id="m-gst">
+          <option value="18">18%</option>
+          <option value="28">28%</option>
+          <option value="12">12%</option>
+          <option value="5">5%</option>
+          <option value="0">0%</option>
+        </select>
+      </div>
     </div>
     <div class="grid-3" style="margin-top:10px;">
-      <div class="form-group"><label>Purchase (₹)</label><input type="number" id="m-purchase" value="0"></div>
+      <div class="form-group"><label>Purchase Rate (₹)</label><input type="number" id="m-purchase" value="0"></div>
       <div class="form-group"><label>Selling Rate *</label><input type="number" id="m-price" placeholder="Rate"></div>
-      <div class="form-group"><label>Total Stock</label><input type="number" id="m-stock" value="10"></div>
-    </div>
-    <div class="grid-3" style="margin-top:10px;">
-      <div class="form-group"><label>Bill Qty</label><input type="number" id="m-qty" value="1"></div>
-      <div class="form-group"><label>Serial / IMEI</label><input type="text" id="m-sn" placeholder="Optional"></div>
-      <div class="form-group"><label>Warranty</label><input type="number" id="m-warranty" value="12"></div>
+      <div class="form-group"><label>Initial Opening Stock</label><input type="number" id="m-stock" value="10"></div>
     </div>
     <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
       <button class="btn btn-outline" onclick="toggleManualItemModal()">Cancel</button>
-      <button class="btn btn-success" onclick="addManualToCartAndCloud()">Add to Cart & Cloud</button>
+      <button class="btn btn-success" onclick="saveMasterItemToCloud()"><i class="fa-solid fa-floppy-disk"></i> Save Item to Master</button>
     </div>
   </div>
 </div>
@@ -551,7 +561,7 @@
 // 👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆
 // =========================================================================
 
-const PERMANENT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzlFA8x80hKmBIrS_RUaUbRa_e4OfeduwRxIhfB4P0x9cj03pgUWRzNA_hjn5gZMzdI/exec";
+const PERMANENT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXn0N8-95lXUQmJcCp4R4ZKteerp5grOvD6EIGc47DxHMnaKFaOyUMvwXt3P38LAKg/exec";
 
 // =========================================================================
 // 👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆
@@ -561,18 +571,19 @@ const SHOP_UPI_ID = "7726923489-3@ybl";
 const SHOP_NAME = "SHRI DARIYAV ELECTRICALS AND DECORATION";
 const SHOP_GSTIN = "08JUSPS5893C1ZM";
 
+// 100% LIVE IN-MEMORY STORE (NO LOCAL STORAGE CACHING)
 let stock = [];
 let invoices = [];
 let purchases = [];
 let ledgerTxns = [];
 let cart = [];
 let purchaseCart = [];
-let currentLedgerType = "Customer"; // 'Customer' or 'Supplier'
-let pendingDeleteTarget = null; // { type: 'sales'|'purchase', id: '...' }
+let currentLedgerType = "Customer";
+let pendingDeleteTarget = null;
 
-// --- AUTHENTICATION & SINGLE-PLACE RESET ---
+// --- AUTHENTICATION ---
 function checkAuthOnLoad() {
-  const currentSession = localStorage.getItem('erp_active_session');
+  const currentSession = sessionStorage.getItem('erp_active_session');
   if (currentSession) {
     try {
       unlockApp(JSON.parse(currentSession).user);
@@ -598,7 +609,7 @@ function executeLogin() {
     .then(data => {
       btn.disabled = false;
       if (data.status === "success") {
-        localStorage.setItem('erp_active_session', JSON.stringify({ user: data.user, role: data.role }));
+        sessionStorage.setItem('erp_active_session', JSON.stringify({ user: data.user, role: data.role }));
         unlockApp(data.user);
       } else {
         errBox.innerText = data.message || "Login failed!";
@@ -607,7 +618,7 @@ function executeLogin() {
     .catch(() => {
       btn.disabled = false;
       if (user.toLowerCase() === "admin" && pass === "123456") {
-        localStorage.setItem('erp_active_session', JSON.stringify({ user: "admin", role: "Admin" }));
+        sessionStorage.setItem('erp_active_session', JSON.stringify({ user: "admin", role: "Admin" }));
         unlockApp("admin");
       } else {
         errBox.innerText = "Incorrect credentials!";
@@ -648,12 +659,13 @@ function unlockApp(username) {
   document.getElementById('app-wrapper').style.display = 'flex';
   document.getElementById('logged-username').innerText = username;
   document.getElementById('pur-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('rec-date').value = new Date().toISOString().split('T')[0];
   init();
 }
 
 function executeLogout() {
   if (confirm("Do you want to lock the system and logout?")) {
-    localStorage.removeItem('erp_active_session');
+    sessionStorage.removeItem('erp_active_session');
     location.reload();
   }
 }
@@ -707,23 +719,25 @@ function getPartyCurrentBalance(partyName, partyType) {
   const pName = (partyName || '').trim().toLowerCase();
   if (!pName || pName === 'cash customer') return 0;
 
-  // Filter transactions for this party from cloud ledger
   let debits = 0, credits = 0;
   ledgerTxns.filter(t => (t.party || '').trim().toLowerCase() === pName && t.partyType === partyType).forEach(t => {
     debits += (t.debit || 0);
     credits += (t.credit || 0);
   });
 
-  // Also include invoices if not yet fully in ledger
   if (partyType === 'Customer') {
     invoices.filter(i => i.payMode === 'Credit' && (i.customer.name || '').trim().toLowerCase() === pName).forEach(i => {
-      // Avoid double count if already in ledger
       const recorded = ledgerTxns.some(t => t.ref === i.invDisplayNo);
       if (!recorded) debits += (i.grandTotal || 0);
     });
+    return (debits - credits);
+  } else {
+    purchases.filter(p => p.payMode === 'Credit' && (p.supplier || '').trim().toLowerCase() === pName).forEach(p => {
+      const recorded = ledgerTxns.some(t => t.ref === ('PUR-' + p.id));
+      if (!recorded) credits += (p.total || 0);
+    });
+    return (credits - debits);
   }
-
-  return (debits - credits);
 }
 
 function validatePartyLedgerName() {
@@ -798,10 +812,10 @@ function selectCustomer(name, phone, addr) {
   validatePartyLedgerName();
 }
 
-// --- CENTRAL DATA SYNC ENGINE ---
+// --- CENTRAL DATA SYNC ENGINE (100% REAL-TIME GOOGLE SHEET CONNECTION) ---
 function syncAllData(showAlert = false) {
   const centralStatus = document.getElementById('sync-central-status');
-  if (centralStatus) centralStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Synchronizing all databases with cloud...';
+  if (centralStatus) centralStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching live records from Google Sheet...';
 
   syncInventoryStock();
   loadPurchasesFromCloud();
@@ -830,7 +844,6 @@ function syncInventoryStock() {
           });
         }
       }
-      localStorage.setItem('nutun_stock', JSON.stringify(stock));
       renderStockTable();
     })
     .catch(() => {});
@@ -843,19 +856,15 @@ function loadInvoicesFromCloud(showAlert = false) {
       if (Array.isArray(cloudInvoices)) {
         invoices = cloudInvoices;
         invoices.sort((a,b) => (b.timestamp || b.id) - (a.timestamp || a.id));
-        localStorage.setItem('nutun_invoices', JSON.stringify(invoices));
         renderHistoryTable();
         renderPartySelectOptions();
         updateNextBillPreview();
         const centralStatus = document.getElementById('sync-central-status');
-        if (centralStatus) centralStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> All ERP Modules Synchronized Successfully!';
-        if (showAlert) alert('All ERP Databases Synchronized Successfully!');
+        if (centralStatus) centralStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Live Cloud Records Synchronized Successfully!';
+        if (showAlert) alert('All Live ERP Records Synchronized Successfully!');
       }
     })
-    .catch(() => {
-      invoices = JSON.parse(localStorage.getItem('nutun_invoices')) || [];
-      renderHistoryTable();
-    });
+    .catch(() => {});
 }
 
 function loadPurchasesFromCloud() {
@@ -921,7 +930,7 @@ function populateItemFields(itemId) {
   document.getElementById('item-price').value = itm.price;
   document.getElementById('item-qty').value = '1';
   document.getElementById('item-serial').value = '';
-  document.getElementById('item-warranty').value = '12';
+  document.getElementById('item-warranty').value = '0';
   document.getElementById('pos-dropdown').style.display = 'none';
   document.getElementById('pos-search-input').value = '';
   document.getElementById('item-qty').focus();
@@ -934,7 +943,7 @@ function addItemToCartFromInputs() {
 
   const price = parseFloat(document.getElementById('item-price').value);
   const qty = parseFloat(document.getElementById('item-qty').value);
-  const sn = document.getElementById('item-serial').value.trim() || '-';
+  const sn = document.getElementById('item-serial').value.trim() || '';
   const war = parseInt(document.getElementById('item-warranty').value) || 0;
 
   if (qty <= 0 || price < 0) return alert('Enter valid quantity and price!');
@@ -946,7 +955,7 @@ function addItemToCartFromInputs() {
   document.getElementById('item-price').value = '';
   document.getElementById('item-qty').value = '1';
   document.getElementById('item-serial').value = '';
-  document.getElementById('item-warranty').value = '12';
+  document.getElementById('item-warranty').value = '0';
 
   updateCart();
   document.getElementById('pos-search-input').focus();
@@ -985,9 +994,9 @@ function updateCart() {
       <tr>
         <td>${idx + 1}</td>
         <td><strong>${c.code || '-'}</strong></td>
-        <td><strong>${c.name}</strong></td>
-        <td>${c.sn}</td>
-        <td>${c.warranty} Mo</td>
+        <td>${c.name}</td>
+        <td>${c.sn || '-'}</td>
+        <td>${c.warranty > 0 ? c.warranty + ' Mo' : '-'}</td>
         <td>${c.qty} ${c.unit}</td>
         <td>₹${c.price.toFixed(2)}</td>
         ${isGst ? `<td>₹${taxable.toFixed(2)}</td>` : ''}
@@ -1066,7 +1075,6 @@ function saveAndPrintInvoice() {
   if (existIdx >= 0) invoices[existIdx] = invoiceRecord;
   else invoices.unshift(invoiceRecord);
 
-  localStorage.setItem('nutun_invoices', JSON.stringify(invoices));
   fetch(PERMANENT_SCRIPT_URL + "?action=save_invoice&data=" + encodeURIComponent(JSON.stringify(invoiceRecord)), { mode: 'no-cors' });
 
   cart = [];
@@ -1078,6 +1086,7 @@ function saveAndPrintInvoice() {
   renderHistoryTable();
   renderPartySelectOptions();
   updateNextBillPreview();
+  syncInventoryStock();
 
   showPrintModal(invoiceRecord);
 }
@@ -1115,7 +1124,7 @@ function promptDeleteInvoice(invDisplayNo) {
 
 function promptDeletePurchase(purId) {
   pendingDeleteTarget = { type: 'purchase', id: purId };
-  document.getElementById('delete-modal-msg').innerText = `Deleting Purchase ${purId} will remove inward quantities from inventory stock.`;
+  document.getElementById('delete-modal-msg').innerText = `Deleting Purchase ${purId} will deduct inward quantities from inventory stock.`;
   document.getElementById('delete-admin-pass').value = '';
   document.getElementById('delete-error').innerText = '';
   document.getElementById('delete-modal').style.display = 'flex';
@@ -1140,7 +1149,6 @@ function executeDeletionConfirmed() {
       .then(res => {
         if (res.status === "success") {
           invoices = invoices.filter(i => i.invDisplayNo !== pendingDeleteTarget.id);
-          localStorage.setItem('nutun_invoices', JSON.stringify(invoices));
           closeDeleteModal();
           renderHistoryTable();
           syncInventoryStock();
@@ -1167,7 +1175,7 @@ function executeDeletionConfirmed() {
   }
 }
 
-// --- PURCHASE MODULE (WITH GST% & HSN & EDITING) ---
+// --- PURCHASE MODULE (CLEAN BILLING, GST LINKED FROM MASTER, + CREATE ITEM) ---
 function handlePurSearchInput(val) {
   const query = val.trim().toLowerCase();
   const dropdown = document.getElementById('pur-dropdown');
@@ -1177,7 +1185,7 @@ function handlePurSearchInput(val) {
   if (matches.length === 0) { dropdown.style.display = 'none'; return; }
 
   dropdown.innerHTML = matches.map(m => `
-    <div class="pos-item-row" onclick="selectPurItem('${m.name.replace(/'/g, "\\'")}', '${m.code}', '${m.hsn}', ${m.purchase}, ${m.price}, ${m.gst})">
+    <div class="pos-item-row" onclick="selectPurItem('${m.name.replace(/'/g, "\\'")}', '${m.code}', ${m.purchase}, ${m.price}, ${m.gst})">
       <div><span class="pos-item-code">[${m.code}]</span> <strong>${m.name}</strong> <span style="font-size:11px; color:#555;">(HSN:${m.hsn}, ${m.gst}%)</span></div>
       <div>Cost: ₹${m.purchase}</div>
     </div>
@@ -1185,13 +1193,11 @@ function handlePurSearchInput(val) {
   dropdown.style.display = 'block';
 }
 
-function selectPurItem(name, code, hsn, cost, price, gst) {
+function selectPurItem(name, code, cost, price, gst) {
   document.getElementById('pur-item-name').value = name;
   document.getElementById('pur-item-code').value = code;
-  document.getElementById('pur-item-hsn').value = hsn || '8536';
   document.getElementById('pur-item-cost').value = cost;
   document.getElementById('pur-item-price').value = price;
-  document.getElementById('pur-item-gst').value = gst || '18';
   document.getElementById('pur-dropdown').style.display = 'none';
   document.getElementById('pur-item-qty').focus();
 }
@@ -1199,13 +1205,16 @@ function selectPurItem(name, code, hsn, cost, price, gst) {
 function addPurchaseRow() {
   const name = document.getElementById('pur-item-name').value.trim();
   const code = document.getElementById('pur-item-code').value.trim() || ('ITM' + (stock.length + 1));
-  const hsn = document.getElementById('pur-item-hsn').value.trim() || '8536';
   const qty = parseFloat(document.getElementById('pur-item-qty').value) || 0;
   const cost = parseFloat(document.getElementById('pur-item-cost').value) || 0;
   const price = parseFloat(document.getElementById('pur-item-price').value) || (cost * 1.2);
-  const gst = parseFloat(document.getElementById('pur-item-gst').value) || 18;
 
   if (!name || qty <= 0 || cost <= 0) return alert('Enter valid item name, quantity and purchase rate!');
+
+  // Match GST and HSN from Master item if exists
+  const existingMaster = stock.find(s => s.code.toLowerCase() === code.toLowerCase() || s.name.toLowerCase() === name.toLowerCase());
+  const gst = existingMaster ? existingMaster.gst : 18;
+  const hsn = existingMaster ? existingMaster.hsn : "8536";
 
   purchaseCart.push({ name, code, hsn, qty, cost, price, gst, total: (qty * cost) });
   document.getElementById('pur-item-name').value = '';
@@ -1222,7 +1231,7 @@ function renderPurchaseTable() {
   let gTot = 0;
   purchaseCart.forEach((p, idx) => {
     gTot += p.total;
-    tb.innerHTML += `<tr><td>${idx+1}</td><td>${p.code}</td><td><strong>${p.name}</strong></td><td>${p.hsn}</td><td>+${p.qty}</td><td>₹${p.cost}</td><td>₹${p.price}</td><td>${p.gst}%</td><td>₹${p.total.toFixed(2)}</td><td><button class="btn btn-danger" style="padding:2px 6px; font-size:11px;" onclick="purchaseCart.splice(${idx},1); renderPurchaseTable();">✕</button></td></tr>`;
+    tb.innerHTML += `<tr><td>${idx+1}</td><td>${p.code}</td><td>${p.name}</td><td>+${p.qty}</td><td>₹${p.cost}</td><td>₹${p.price}</td><td>₹${p.total.toFixed(2)}</td><td><button class="btn btn-danger" style="padding:2px 6px; font-size:11px;" onclick="purchaseCart.splice(${idx},1); renderPurchaseTable();">✕</button></td></tr>`;
   });
   document.getElementById('pur-grand-total').innerText = '₹' + gTot.toFixed(2);
 }
@@ -1249,7 +1258,6 @@ function savePurchaseToCloud() {
 
   fetch(PERMANENT_SCRIPT_URL + "?action=save_purchase&data=" + encodeURIComponent(JSON.stringify(purPayload)), { mode: 'no-cors' });
 
-  // Update in local memory
   const existingIdx = purchases.findIndex(p => p.id === purPayload.id);
   if (existingIdx >= 0) purchases[existingIdx] = purPayload;
   else purchases.unshift(purPayload);
@@ -1384,7 +1392,7 @@ function renderPurchaseHistoryTable() {
   });
 }
 
-// --- EXPORT TO EXCEL ENGINES ---
+// --- EXPORT ENGINES ---
 function exportInvoicesToExcel() {
   const list = getFilteredSalesInvoices();
   if (list.length === 0) return alert("No sales invoices found for the selected date range!");
@@ -1475,7 +1483,7 @@ function downloadCsvBlob(content, filename) {
   document.body.removeChild(a);
 }
 
-// --- TWO-WAY PARTY LEDGER MODULE ---
+// --- TWO-WAY PARTY LEDGER MODULE (WITH DATE FILTER & A4 STATEMENT PRINT) ---
 function switchLedgerType(type) {
   currentLedgerType = type;
   document.getElementById('btn-ledger-cust').classList.toggle('active', type === 'Customer');
@@ -1501,7 +1509,6 @@ function renderPartySelectOptions() {
     });
   }
 
-  // Also include parties from cloud ledger transactions
   ledgerTxns.filter(t => t.partyType === currentLedgerType).forEach(t => {
     if (t.party) partySet.add(t.party.trim());
   });
@@ -1519,39 +1526,65 @@ function loadPartyLedger() {
 
   document.getElementById('ledger-box-title').innerText = `${party} (${currentLedgerType} Khata)`;
 
-  let txns = [];
+  const from = document.getElementById('filter-ledger-from').value;
+  const to = document.getElementById('filter-ledger-to').value;
+
+  let allTxns = [];
 
   if (currentLedgerType === 'Customer') {
-    // 1. Credit Bills
     invoices.filter(i => i.payMode === 'Credit' && (i.customer.name || '').trim().toLowerCase() === party.toLowerCase()).forEach(b => {
-      txns.push({ date: b.date, type: 'Credit Sale Bill', ref: b.invDisplayNo, notes: 'Goods Sold', debit: b.grandTotal, credit: 0 });
+      allTxns.push({ date: b.date, type: 'Credit Sale Bill', ref: b.invDisplayNo, notes: 'Goods Sold', debit: b.grandTotal, credit: 0 });
     });
   } else {
-    // 1. Credit Purchases
     purchases.filter(p => p.payMode === 'Credit' && (p.supplier || '').trim().toLowerCase() === party.toLowerCase()).forEach(p => {
-      txns.push({ date: p.date, type: 'Credit Purchase', ref: 'PUR-' + p.id, notes: p.remark || 'Inward Goods', debit: 0, credit: p.total });
+      allTxns.push({ date: p.date, type: 'Credit Purchase', ref: 'PUR-' + p.id, notes: p.remark || 'Inward Goods', debit: 0, credit: p.total });
     });
   }
 
-  // 2. Cloud Ledger Recorded Payments
   ledgerTxns.filter(t => (t.party || '').trim().toLowerCase() === party.toLowerCase() && t.partyType === currentLedgerType).forEach(t => {
-    // If not already included as a bill
-    if (!txns.some(x => x.ref === t.ref && x.type === t.type)) {
-      txns.push({ date: t.date, type: t.type, ref: t.ref, notes: t.note, debit: t.debit, credit: t.credit });
+    if (!allTxns.some(x => x.ref === t.ref && x.type === t.type)) {
+      allTxns.push({ date: t.date, type: t.type, ref: t.ref, notes: t.note, debit: t.debit, credit: t.credit });
     }
   });
 
-  txns.sort((a,b) => new Date(a.date) - new Date(b.date));
+  allTxns.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+  // Compute opening balance before 'from' date if date filter applied
+  let openingBal = 0;
+  let filteredTxns = [];
+
+  allTxns.forEach(t => {
+    if (from && t.date < from) {
+      if (currentLedgerType === 'Customer') openingBal += (t.debit - t.credit);
+      else openingBal += (t.credit - t.debit);
+    } else if (!to || t.date <= to) {
+      filteredTxns.push(t);
+    }
+  });
 
   const tb = document.querySelector('#party-txn-table tbody');
   tb.innerHTML = '';
-  let balance = 0;
+  let runningBal = openingBal;
 
-  txns.forEach(t => {
+  if (from) {
+    tb.innerHTML += `
+      <tr style="background:#f8fafc; font-weight:bold;">
+        <td>${from}</td>
+        <td>Opening Balance</td>
+        <td>-</td>
+        <td>Brought Forward</td>
+        <td>-</td>
+        <td>-</td>
+        <td><strong>₹${runningBal.toFixed(2)}</strong></td>
+      </tr>
+    `;
+  }
+
+  filteredTxns.forEach(t => {
     if (currentLedgerType === 'Customer') {
-      balance += (t.debit - t.credit);
+      runningBal += (t.debit - t.credit);
     } else {
-      balance += (t.credit - t.debit); // For Supplier, Credit is what we owe
+      runningBal += (t.credit - t.debit);
     }
 
     tb.innerHTML += `
@@ -1562,17 +1595,18 @@ function loadPartyLedger() {
         <td style="color:#555; font-style:italic;">${t.notes || '-'}</td>
         <td style="color:${t.debit > 0 ? '#dc2626' : '#555'};">${t.debit > 0 ? '₹' + t.debit : '-'}</td>
         <td style="color:${t.credit > 0 ? '#16a34a' : '#555'};">${t.credit > 0 ? '₹' + t.credit : '-'}</td>
-        <td><strong>₹${balance.toFixed(2)}</strong></td>
+        <td><strong>₹${runningBal.toFixed(2)}</strong></td>
       </tr>
     `;
   });
 
-  document.getElementById('party-net-balance').innerText = `Net Balance: ₹${balance.toFixed(2)} (${balance > 0 ? (currentLedgerType === 'Customer' ? 'Due Receivable' : 'Due Payable') : 'Clear'})`;
+  document.getElementById('party-net-balance').innerText = `Net Balance: ₹${runningBal.toFixed(2)} (${runningBal > 0 ? (currentLedgerType === 'Customer' ? 'Due Receivable' : 'Due Payable') : 'Clear'})`;
 }
 
 function saveCloudLedgerTransaction() {
   const party = document.getElementById('ledger-party-select').value;
   const amt = parseFloat(document.getElementById('rec-amount').value);
+  const date = document.getElementById('rec-date').value || new Date().toISOString().split('T')[0];
   const mode = document.getElementById('rec-mode').value;
   const note = document.getElementById('rec-note').value.trim();
 
@@ -1581,14 +1615,14 @@ function saveCloudLedgerTransaction() {
   let debitVal = 0, creditVal = 0, txnType = "";
   if (currentLedgerType === 'Customer') {
     txnType = "Payment In (" + mode + ")";
-    creditVal = amt; // Reduces customer due
+    creditVal = amt;
   } else {
     txnType = "Payment Out (" + mode + ")";
-    debitVal = amt; // Reduces supplier liability
+    debitVal = amt;
   }
 
   const txnPayload = {
-    date: new Date().toISOString().split('T')[0],
+    date: date,
     party: party,
     partyType: currentLedgerType,
     type: txnType,
@@ -1604,7 +1638,71 @@ function saveCloudLedgerTransaction() {
   document.getElementById('rec-amount').value = '';
   document.getElementById('rec-note').value = '';
   loadPartyLedger();
-  alert('Transaction recorded and synced to cloud ledger!');
+  alert('Payment transaction posted and synced to Google Sheet!');
+}
+
+function printLedgerStatement() {
+  const party = document.getElementById('ledger-party-select').value;
+  if (!party) return;
+  const tableContent = document.getElementById('party-txn-table').outerHTML;
+  const netBalText = document.getElementById('party-net-balance').innerText;
+
+  const w = window.open('', '_blank');
+  w.document.write(`
+    <html>
+    <head>
+      <title>Ledger Statement - ${party}</title>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 20px; color: #000; }
+        .hdr { text-align: center; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 12px; }
+        .hdr h2 { margin: 0; font-size: 18px; }
+        .hdr p { margin: 3px 0; font-size: 11px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #333; padding: 5px 8px; font-size: 11.5px; text-align: left; }
+        th { background: #f2f2f2; font-weight: bold; }
+        .bal { margin-top: 15px; font-size: 14px; font-weight: bold; text-align: right; }
+      </style>
+    </head>
+    <body onload="window.print()">
+      <div class="hdr">
+        <h2>${SHOP_NAME}</h2>
+        <p>STATEMENT OF ACCOUNT (${currentLedgerType.toUpperCase()})</p>
+        <p><strong>Party: ${party}</strong> | Date Generated: ${new Date().toLocaleDateString()}</p>
+      </div>
+      ${tableContent}
+      <div class="bal">${netBalText}</div>
+    </body>
+    </html>
+  `);
+  w.document.close();
+}
+
+// --- MASTER ITEM CREATION ---
+function toggleManualItemModal() {
+  const m = document.getElementById('manual-modal');
+  m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+}
+
+function saveMasterItemToCloud() {
+  const code = document.getElementById('m-code').value.trim() || ('ITM' + (stock.length + 1));
+  const name = document.getElementById('m-name').value.trim();
+  const hsn = document.getElementById('m-hsn').value.trim() || '8536';
+  const unit = document.getElementById('m-unit').value;
+  const gst = parseFloat(document.getElementById('m-gst').value);
+  const purchase = parseFloat(document.getElementById('m-purchase').value) || 0;
+  const price = parseFloat(document.getElementById('m-price').value);
+  const totalStock = parseFloat(document.getElementById('m-stock').value) || 0;
+
+  if (!name || isNaN(price) || price <= 0) return alert('Please enter valid item name and selling rate!');
+
+  const itemPayload = { code, name, hsn, unit, purchase, price, gst, stock: totalStock };
+
+  fetch(PERMANENT_SCRIPT_URL + "?action=add_master_item&data=" + encodeURIComponent(JSON.stringify(itemPayload)), { mode: 'no-cors' });
+
+  stock.push({ id: 'item_' + Date.now(), ...itemPayload });
+  renderStockTable();
+  toggleManualItemModal();
+  alert('New item added to Items_Master in Google Sheet!');
 }
 
 // --- ITEM AUDIT TRAIL ENGINE ---
@@ -1688,15 +1786,28 @@ function closeStockAuditModal() {
   document.getElementById('stock-audit-modal').style.display = 'none';
 }
 
-// --- COMPACT MULTI-PAGE A4 PRINT LAYOUT ENGINE ---
+// --- TALLY & BUSY EXACT STANDARD INVOICE PRINT ENGINE (DYNAMIC PAGINATION) ---
 function showPrintModal(inv) {
   const container = document.getElementById('invoice-printable-container');
   container.innerHTML = '';
 
   const isGst = inv.isGst;
   const items = inv.items || [];
-  const ITEMS_PER_PAGE = 22;
-  const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE) || 1;
+  const totalItems = items.length;
+
+  // DYNAMIC PAGINATION RULE:
+  // Up to 22 items: 1 Single Page with Full Footer.
+  // Above 22 items: Page 1 holds 28-30 items, remaining spill to Page 2 with Footer.
+  let pages = [];
+  if (totalItems <= 22) {
+    pages.push(items);
+  } else {
+    const P1_LIMIT = 28;
+    pages.push(items.slice(0, P1_LIMIT));
+    pages.push(items.slice(P1_LIMIT));
+  }
+
+  const totalPages = pages.length;
 
   let hsnMap = {};
   items.forEach(it => {
@@ -1710,42 +1821,45 @@ function showPrintModal(inv) {
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiUrl)}`;
 
   let pageCarriedTotal = 0;
+  let overallIdxCounter = 0;
 
   for (let p = 0; p < totalPages; p++) {
     const isFirstPage = (p === 0);
     const isLastPage = (p === totalPages - 1);
-    const pageItems = items.slice(p * ITEMS_PER_PAGE, (p + 1) * ITEMS_PER_PAGE);
+    const pageItems = pages[p];
 
     const pageDiv = document.createElement('div');
     pageDiv.className = 'invoice-page';
 
+    // Header (Exact Sizes)
     let headerHtml = `
       <div>
         <div class="t-header">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:9px; color:#555;">Page ${p + 1} of ${totalPages}</span>
+            <span style="font-size:10px; color:#555;">Page ${p + 1} of ${totalPages}</span>
             <div class="t-title">${isGst ? 'TAX INVOICE' : 'ESTIMATE'}</div>
-            <span style="font-size:9px; color:#555;">Original for Recipient</span>
+            <span style="font-size:10px; color:#555;">Original for Recipient</span>
           </div>
           <div class="t-company-name">${SHOP_NAME}</div>
-          <div>DELHI GETA A ROAD RATHOR BHAWAN NAGAUR RAJ - 341001</div>
-          <div>Mob: +91 7726923489, 7014248846 ${isGst ? '| GSTIN: ' + SHOP_GSTIN : ''}</div>
+          <div class="t-company-address">DELHI GETA A ROAD RATHOR BHAWAN NAGAUR RAJ - 341001</div>
+          <div class="t-company-address">Mob: +91 7726923489, 7014248846 ${isGst ? '| GSTIN: ' + SHOP_GSTIN : ''}</div>
         </div>
         <div class="t-row border-b">
           <div class="t-col-6 border-r">
-            <div><strong>Billed To:</strong> <span style="font-weight:bold; font-size:11px;">${inv.customer.name}</span></div>
-            <div><strong>Phone:</strong> ${inv.customer.phone || '-'}</div>
-            <div><strong>Address:</strong> ${inv.customer.address || '-'}</div>
+            <div>Billed To: <span class="t-cust-name">${inv.customer.name}</span></div>
+            <div>Phone: ${inv.customer.phone || '-'}</div>
+            <div>Address: ${inv.customer.address || '-'}</div>
           </div>
           <div class="t-col-6">
-            <div><strong>Invoice No:</strong> <span style="font-weight:bold;">${inv.invDisplayNo}</span></div>
-            <div><strong>Date:</strong> ${inv.date}</div>
-            <div><strong>Payment Mode:</strong> ${inv.payMode}</div>
+            <div>Invoice No: <strong>${inv.invDisplayNo}</strong></div>
+            <div>Date: ${inv.date}</div>
+            <div>Payment Mode: ${inv.payMode}</div>
           </div>
         </div>
       </div>
     `;
 
+    // Table
     let tableHtml = `
       <div style="flex:1 1 auto; display:flex; flex-direction:column; border-bottom:1.5px solid #000;">
         <table class="t-table">
@@ -1771,14 +1885,25 @@ function showPrintModal(inv) {
       `;
     }
 
-    pageItems.forEach((it, idx) => {
-      const overallIndex = (p * ITEMS_PER_PAGE) + idx + 1;
+    pageItems.forEach((it) => {
+      overallIdxCounter++;
       pageCarriedTotal += it.total;
+
+      // Conditional SN and Warranty string
+      let metaDetails = [];
+      if (it.sn && it.sn !== '-' && it.sn.trim() !== '') {
+        metaDetails.push(`SN: ${it.sn}`);
+      }
+      if (it.warranty && parseInt(it.warranty) > 0) {
+        metaDetails.push(`War: ${it.warranty}Mo`);
+      }
+      const metaStr = metaDetails.length > 0 ? `<small style="color:#555; font-size:10px;"> | ${metaDetails.join(' | ')}</small>` : '';
+
       tableHtml += `
         <tr>
-          <td style="text-align:center;">${overallIndex}</td>
-          <td style="text-align:center; font-weight:bold;">${it.code || '-'}</td>
-          <td><strong>${it.name}</strong> <small style="color:#555;">${it.sn !== '-' ? '| SN:' + it.sn : ''} | War:${it.warranty}Mo</small></td>
+          <td style="text-align:center;">${overallIdxCounter}</td>
+          <td style="text-align:center;">${it.code || '-'}</td>
+          <td style="text-align:left;">${it.name}${metaStr}</td>
           <td style="text-align:center;">${it.qty} ${it.unit}</td>
           <td style="text-align:right;">${it.price.toFixed(2)}</td>
           <td style="text-align:right;">${it.total.toFixed(2)}</td>
@@ -1801,6 +1926,7 @@ function showPrintModal(inv) {
       </div>
     `;
 
+    // Footer
     let footerHtml = `<div>`;
     if (isLastPage) {
       if (isGst) {
@@ -1829,11 +1955,11 @@ function showPrintModal(inv) {
           </div>
           <div class="t-col-6" style="text-align:right;">
             ${isGst ? `<div>Sub Total (Taxable): ₹${inv.subtotal.toFixed(2)}</div><div>CGST: ₹${(inv.tax/2).toFixed(2)}</div><div>SGST: ₹${(inv.tax/2).toFixed(2)}</div>` : ''}
-            <div style="font-size:14px; font-weight:bold; margin-top:2px;">Grand Total: ₹${inv.grandTotal.toFixed(2)}</div>
+            <div class="t-grand-total" style="margin-top:2px;">Grand Total: ₹${inv.grandTotal.toFixed(2)}</div>
           </div>
         </div>
         <div class="t-row">
-          <div class="t-col-6 border-r" style="font-size:9px; display:flex; gap:8px; align-items:center;">
+          <div class="t-col-6 border-r" style="font-size:10px; display:flex; gap:8px; align-items:center;">
             <div>
               <strong>Bank Details:</strong> HDFC BANK<br>
               A/c No.: <strong>50200100228274</strong><br>
@@ -1843,7 +1969,7 @@ function showPrintModal(inv) {
             </div>
             <div style="text-align:center; padding-left:6px; border-left:1px dashed #ccc;">
               <img src="${qrCodeUrl}" alt="UPI QR" style="width:65px; height:65px; border:1px solid #999; display:block; margin:auto;">
-              <span style="font-size:7.5px; font-weight:bold; color:#1e3a8a;">Scan & Pay via UPI</span>
+              <span style="font-size:8px; font-weight:bold; color:#1e3a8a;">Scan & Pay via UPI</span>
             </div>
           </div>
           <div class="t-col-6" style="text-align:right; display:flex; flex-direction:column; justify-content:space-between;">
@@ -1854,9 +1980,9 @@ function showPrintModal(inv) {
       `;
     } else {
       footerHtml += `
-        <div class="t-row" style="padding:6px; justify-content:space-between; font-size:9.5px; font-weight:bold; background:#fafafa;">
+        <div class="t-row" style="padding:6px; justify-content:space-between; font-size:10px; font-weight:bold; background:#fafafa;">
           <span>Invoice No: ${inv.invDisplayNo}</span>
-          <span>Continued on Next Page...</span>
+          <span>Continued on Page ${p + 2}...</span>
         </div>
       `;
     }
@@ -1881,7 +2007,7 @@ function renderStockTable() {
     tb.innerHTML += `
       <tr style="cursor:pointer;" onclick="openStockAuditModal('${s.code}','${s.name.replace(/'/g, "\\'")}')">
         <td><strong>${s.code || '-'}</strong></td>
-        <td><strong>${s.name}</strong></td>
+        <td>${s.name}</td>
         <td>${s.hsn}</td>
         <td>${s.unit}</td>
         <td>₹${s.purchase}</td>
@@ -1904,35 +2030,6 @@ function switchTab(tab) {
     renderHistoryTable();
     renderPurchaseHistoryTable();
   }
-}
-
-function toggleManualItemModal() {
-  const m = document.getElementById('manual-modal');
-  m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
-}
-
-function addManualToCartAndCloud() {
-  const code = document.getElementById('m-code').value.trim() || ('ITM' + (stock.length + 1));
-  const name = document.getElementById('m-name').value.trim();
-  const hsn = document.getElementById('m-hsn').value.trim() || '8536';
-  const unit = document.getElementById('m-unit').value;
-  const gst = parseFloat(document.getElementById('m-gst').value);
-  const purchase = parseFloat(document.getElementById('m-purchase').value) || 0;
-  const price = parseFloat(document.getElementById('m-price').value);
-  const totalStock = parseFloat(document.getElementById('m-stock').value) || 10;
-  const qty = parseFloat(document.getElementById('m-qty').value);
-  const sn = document.getElementById('m-sn').value.trim() || '-';
-  const war = parseInt(document.getElementById('m-warranty').value) || 0;
-
-  if (!name || isNaN(price) || price <= 0 || isNaN(qty) || qty <= 0) return alert('Please fill in all item fields correctly!');
-
-  const localId = 'item_' + Date.now();
-  cart.push({ id: localId, code, name, hsn, unit, price, qty, gst, sn, warranty: war });
-  stock.push({ id: localId, code, name, hsn, unit, purchase, price, gst, stock: totalStock });
-  renderStockTable();
-
-  toggleManualItemModal();
-  updateCart();
 }
 
 function numberToWords(num) {
