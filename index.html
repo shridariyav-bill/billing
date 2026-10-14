@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SHRI DARIYAV ELECTRICALS AND DECORATION - ERP</title>
+  <title>ERP SYSTEM</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -91,10 +91,14 @@
       border: 1.5px solid #000;
     }
     .invoice-page:last-child { page-break-after: auto; }
-    .t-header { text-align: center; border-bottom: 1.5px solid #000; padding: 4px; flex-shrink: 0; }
-    .t-title { font-size: 16px; font-weight: bold; letter-spacing: 1px; }
-    .t-company-name { font-size: 19px; font-weight: 900; margin: 2px 0; }
-    .t-company-address { font-size: 11px; }
+    
+    /* PERFECT ABSOLUTE 3-COLUMN HEADER CENTERING */
+    .t-header { border-bottom: 1.5px solid #000; padding: 4px; flex-shrink: 0; text-align: center; }
+    .t-header-topline { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; width: 100%; margin-bottom: 2px; }
+    .t-title { font-size: 16px; font-weight: bold; letter-spacing: 1px; text-align: center; }
+    .t-company-name { font-size: 19px; font-weight: 900; margin: 2px 0; text-align: center; }
+    .t-company-address { font-size: 11px; text-align: center; }
+    
     .t-row { display: flex; width: 100%; flex-shrink: 0; }
     .t-col-6 { width: 50%; padding: 4px; box-sizing: border-box; }
     .t-cust-name { font-size: 13.5px; font-weight: bold; }
@@ -132,7 +136,7 @@
 <div id="auth-overlay">
   <div class="login-card">
     <div style="font-size:40px; color:#1e3a8a; margin-bottom:10px;"><i class="fa-solid fa-shield-halved"></i></div>
-    <h2>NUTAN ERP SYSTEM</h2>
+    <h2 id="login-brand-title">ERP SYSTEM</h2>
     <p>Secure Login Gateway</p>
     
     <div id="login-fields">
@@ -168,8 +172,9 @@
 
 <div class="app-container" id="app-wrapper" style="display:none;">
   <aside class="sidebar">
-    <h2>⚡NUTAN ERP SYSTEM</h2>
+    <h2 id="sidebar-brand-title">⚡ ERP SYSTEM</h2>
     <button class="nav-btn active" onclick="switchTab('billing')"><i class="fa-solid fa-file-invoice"></i> Sales Entry</button>
+    <button class="nav-btn" onclick="switchTab('return')"><i class="fa-solid fa-rotate-left"></i> Sales Return</button>
     <button class="nav-btn" onclick="switchTab('purchase')"><i class="fa-solid fa-cart-flatbed"></i> Purchase Entry</button>
     <button class="nav-btn" onclick="switchTab('history')"><i class="fa-solid fa-clock-rotate-left"></i> Invoice History</button>
     <button class="nav-btn" onclick="switchTab('ledger')"><i class="fa-solid fa-book"></i> Party Ledger</button>
@@ -184,11 +189,11 @@
 
   <nav class="bottom-bar">
     <button class="b-nav active" onclick="switchTab('billing')"><i class="fa-solid fa-file-invoice"></i>Sales</button>
+    <button class="b-nav" onclick="switchTab('return')"><i class="fa-solid fa-rotate-left"></i>Return</button>
     <button class="b-nav" onclick="switchTab('purchase')"><i class="fa-solid fa-cart-flatbed"></i>Purchase</button>
     <button class="b-nav" onclick="switchTab('history')"><i class="fa-solid fa-clock-rotate-left"></i>History</button>
     <button class="b-nav" onclick="switchTab('ledger')"><i class="fa-solid fa-book"></i>Ledger</button>
     <button class="b-nav" onclick="switchTab('stock')"><i class="fa-solid fa-boxes-stacked"></i>Stock</button>
-    <button class="b-nav" onclick="switchTab('sync')"><i class="fa-solid fa-rotate"></i>Sync</button>
   </nav>
 
   <main class="main-content">
@@ -198,9 +203,9 @@
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
           <h2 style="font-size:1.25rem;"><span id="billing-mode-title">🧾 Sales Counter</span> <span id="bill-next-preview" style="font-size:12px; color:#2563eb; font-weight:normal;"></span></h2>
-          <div style="display:flex; gap:15px; align-items:center;">
-            <label style="cursor:pointer;"><input type="radio" name="bill_type" value="GST" checked onchange="onBillTypeChange()"> <strong>GST Tax Invoice (B2C)</strong></label>
-            <label style="cursor:pointer;"><input type="radio" name="bill_type" value="NON_GST" onchange="onBillTypeChange()"> <strong>Estimate</strong></label>
+          <div style="display:flex; gap:15px; align-items:center;" id="bill-type-radio-group">
+            <label style="cursor:pointer;"><input type="radio" name="bill_type" value="INVOICE" checked onchange="onBillTypeChange()"> <strong id="lbl-bill-type-primary">GST Tax Invoice (B2C)</strong></label>
+            <label style="cursor:pointer;"><input type="radio" name="bill_type" value="ESTIMATE" onchange="onBillTypeChange()"> <strong>Estimate</strong></label>
           </div>
         </div>
 
@@ -216,8 +221,14 @@
                    oninput="handleCustomerSearchInput(this.value)">
             <div id="cust-dropdown" class="cust-dropdown"></div>
           </div>
+          
+          <div class="form-group" id="group-cust-gstin"><label>Customer GSTIN (Optional)</label><input type="text" id="cust-gstin" placeholder="08AAAAA0000A1Z5"></div>
+          
           <div class="form-group"><label>Mobile Number</label><input type="tel" id="cust-phone" placeholder="98XXXXXXXX" oninput="validatePartyLedgerName()"></div>
           <div class="form-group"><label>City / Address</label><input type="text" id="cust-address" placeholder="Nagaur"></div>
+        </div>
+
+        <div class="grid-4" style="margin-top:10px;">
           <div class="form-group">
             <label>Payment Mode</label>
             <select id="cust-paymode">
@@ -275,7 +286,49 @@
       </div>
     </section>
 
-    <!-- 2. PURCHASE ENTRY (CLEAN SCREEN - NO GST SLAB ON ENTRY, DIRECT "+ CREATE NEW ITEM" BUTTON) -->
+    <!-- 2. SALES RETURN / CREDIT NOTE ENGINE -->
+    <section id="tab-return" style="display:none;">
+      <div class="card">
+        <h2><i class="fa-solid fa-rotate-left" style="color:#dc2626;"></i> Sales Return / Credit Note (सामान वापसी)</h2>
+        <p style="font-size:12px; color:#64748b; margin-top:4px;">Restores item stock directly and automatically credits the customer's ledger.</p>
+        
+        <div class="grid-4" style="margin-top:14px;">
+          <div class="form-group pos-search-wrapper">
+            <label>Load from Bill No (Optional):</label>
+            <div style="display:flex; gap:6px;">
+              <input type="text" id="ret-bill-search" placeholder="Type 1002, INV-1002..." onkeydown="if(event.key==='Enter') loadBillItemsForReturn()">
+              <button class="btn btn-primary" onclick="loadBillItemsForReturn()"><i class="fa-solid fa-arrow-down"></i> Load</button>
+            </div>
+            <div id="ret-choice-dropdown" class="pos-dropdown"></div>
+          </div>
+          <div class="form-group"><label>Customer Party Name *</label><input type="text" id="ret-cust-name" placeholder="Customer Name"></div>
+          <div class="form-group"><label>Return Date</label><input type="date" id="ret-date"></div>
+          <div class="form-group"><label>Reason / Note</label><input type="text" id="ret-remark" placeholder="Leftover from electrical work"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Items to Return (Stock will increase +)</h4>
+        <div class="pos-search-wrapper" style="margin: 10px 0;">
+          <input type="text" id="ret-item-search" placeholder="Search unbilled item to return..." oninput="handleReturnSearchInput(this.value)">
+          <div id="ret-dropdown" class="pos-dropdown"></div>
+        </div>
+
+        <table class="data-table" id="return-table">
+          <thead><tr><th>#</th><th>Code</th><th>Item Name</th><th>Return Qty (+)</th><th>Rate (₹)</th><th>Total (₹)</th><th>Action</th></tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <div style="display:flex; justify-content:flex-end; margin-top:15px;">
+          <div style="width:280px; text-align:right;">
+            <h3>Total Return Value: <span id="ret-grand-total" style="color:#dc2626;">₹0.00</span></h3>
+            <button class="btn btn-danger btn-block" style="margin-top:10px;" onclick="executeSaveSalesReturn()"><i class="fa-solid fa-check"></i> Accept Return & Update Stock</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. PURCHASE ENTRY -->
     <section id="tab-purchase" style="display:none;">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
@@ -300,8 +353,8 @@
           </div>
         </div>
         <div class="form-group" style="margin-top:10px;">
-          <label>Purchase Remark / Note (Independent)</label>
-          <input type="text" id="pur-remark" placeholder="Transport freight, terms, delivery notes...">
+          <label>Purchase Remark / Note</label>
+          <input type="text" id="pur-remark" placeholder="Transport freight, delivery notes...">
         </div>
       </div>
 
@@ -313,7 +366,6 @@
           <div id="pur-dropdown" class="pos-dropdown"></div>
         </div>
 
-        <!-- Clean Grid: No GST Slab on Billing -->
         <div class="grid-pur" style="background:#f0fdf4; padding:12px; border-radius:8px; border:1px solid #bbf7d0;">
           <div class="form-group"><label>Item Name *</label><input type="text" id="pur-item-name" placeholder="Item Name"></div>
           <div class="form-group"><label>Code / Model</label><input type="text" id="pur-item-code" placeholder="Code"></div>
@@ -338,7 +390,7 @@
       </div>
     </section>
 
-    <!-- 3. UNIFIED INVOICE HISTORY (SALES & PURCHASE WITH DATE FILTERS & GSTR-1 EXCEL) -->
+    <!-- 4. INVOICE HISTORY -->
     <section id="tab-history" style="display:none;">
       <div class="card">
         <div class="tab-toggle-bar">
@@ -352,7 +404,7 @@
             <h2>Sales Invoices Log & Reports</h2>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <button class="btn btn-success" onclick="exportInvoicesToExcel()"><i class="fa-solid fa-file-excel"></i> 📊 Export Sales to Excel</button>
-              <button class="btn btn-primary" onclick="downloadGstr1Excel()"><i class="fa-solid fa-file-excel"></i> 📑 Download GSTR-1 Excel</button>
+              <button class="btn btn-primary" id="btn-gstr1-export" onclick="downloadGstr1Excel()"><i class="fa-solid fa-file-excel"></i> 📑 Download GSTR-1 Excel</button>
             </div>
           </div>
 
@@ -394,7 +446,7 @@
       </div>
     </section>
 
-    <!-- 4. TWO-WAY PARTY LEDGER (CUSTOMER + SUPPLIER KHATA WITH DATE PICKER, FILTER & STATEMENT PRINT) -->
+    <!-- 5. TWO-WAY PARTY LEDGER -->
     <section id="tab-ledger" style="display:none;">
       <div class="card">
         <div class="tab-toggle-bar">
@@ -422,27 +474,33 @@
           <button class="btn btn-outline" onclick="document.getElementById('filter-ledger-from').value=''; document.getElementById('filter-ledger-to').value=''; loadPartyLedger();"><i class="fa-solid fa-rotate-left"></i> Reset</button>
         </div>
 
-        <!-- Post Payment Box with Custom Date Picker -->
+        <!-- Post / Edit Voucher Form with Opening Balance Option -->
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; background:#fef3c7; padding:10px; border-radius:6px; margin-bottom:12px;">
           <input type="date" id="rec-date" style="width:140px;">
-          <input type="number" id="rec-amount" placeholder="Amount (₹)" style="width:130px;">
-          <select id="rec-mode" style="width:130px;">
+          <select id="rec-type-select" style="width:160px;" onchange="onLedgerTypeSelectChange()">
+            <option value="PAYMENT">Regular Payment</option>
+            <option value="OPENING">Opening Balance</option>
+          </select>
+          <input type="number" id="rec-amount" placeholder="Amount (₹)" style="width:120px;">
+          <select id="rec-mode" style="width:110px;">
             <option value="Cash">Cash</option>
             <option value="UPI">UPI / GPay</option>
             <option value="Bank">Bank Transfer</option>
           </select>
-          <input type="text" id="rec-note" placeholder="Ref / Note" style="width:140px;">
-          <button class="btn btn-success" id="btn-ledger-action" onclick="saveCloudLedgerTransaction()"><i class="fa-solid fa-check"></i> Post Payment</button>
+          <input type="text" id="rec-note" placeholder="Ref / Notes" style="width:130px;">
+          <input type="hidden" id="editing-ledger-ref" value="">
+          <button class="btn btn-success" id="btn-ledger-action" onclick="saveCloudLedgerTransaction()"><i class="fa-solid fa-check"></i> Post Entry</button>
+          <button class="btn btn-outline" id="btn-cancel-ledger-edit" style="display:none;" onclick="cancelLedgerEdit()">Cancel</button>
         </div>
 
         <table class="data-table" id="party-txn-table">
-          <thead><tr><th>Date</th><th>Type</th><th>Ref / Mode</th><th>Notes</th><th>Debit (+)</th><th>Credit (-)</th><th>Balance</th></tr></thead>
+          <thead><tr><th>Date</th><th>Type</th><th>Ref / Mode</th><th>Notes</th><th>Debit (+)</th><th>Credit (-)</th><th>Balance</th><th>Action</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
     </section>
 
-    <!-- 5. LIVE STOCK INVENTORY & AUDIT TRAIL -->
+    <!-- 6. LIVE STOCK INVENTORY & AUDIT TRAIL -->
     <section id="tab-stock" style="display:none;">
       <div class="card">
         <h2><i class="fa-solid fa-boxes-stacked"></i> Live Inventory Stock</h2>
@@ -454,7 +512,7 @@
       </div>
     </section>
 
-    <!-- 6. CENTRAL DATA SYNC -->
+    <!-- 7. CENTRAL DATA SYNC -->
     <section id="tab-sync" style="display:none;">
       <div class="card" style="text-align:center; padding:40px 20px;">
         <div style="font-size:45px; color:#2563eb; margin-bottom:15px;"><i class="fa-solid fa-cloud-arrow-up"></i></div>
@@ -508,7 +566,7 @@
   </div>
 </div>
 
-<!-- Modal for Adding / Creating Master Item -->
+<!-- Modal for Adding Master Item -->
 <div id="manual-modal" class="modal-overlay">
   <div class="modal-content-box">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -556,20 +614,39 @@
 
 <script>
 // =========================================================================
-// 👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇
-// 🔥 [स्टेप: यहाँ पेस्ट करें] अपना नया GOOGLE APPS SCRIPT WEB APP URL नीचे डबल कोट्स "" में डालें:
-// 👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆
+// 🏢 MASTER COMPANY PROFILE SETUP (कंपनी की पूरी जानकारी केवल यहाँ बदलें)
 // =========================================================================
+const COMPANY_CONFIG = {
+  // 1. Google Apps Script Web App URL
+  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwngSoAcNQAfwY3I5HMf2-gcJyOCrUsxwimct3AXIDZyavghICQZzvrJcwUXycwPS2J/exec",
 
-const PERMANENT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXn0N8-95lXUQmJcCp4R4ZKteerp5grOvD6EIGc47DxHMnaKFaOyUMvwXt3P38LAKg/exec";
+  // 2. फर्म का नाम
+  NAME: "SHRI DARIYAV ELECTRICALS AND DECORATION",
 
-// =========================================================================
-// 👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆
-// =========================================================================
+  // 3. पूरा पता, संपर्क सूत्र व ईमेल
+  ADDRESS: "DELHI GETA A ROAD RATHOR BHAWAN NAGAUR RAJ - 341001",
+  PHONE: "+91 7726923489, 7014248846",
+  EMAIL: "shridariyav@gmail.com",
 
-const SHOP_UPI_ID = "7726923489-3@ybl";
-const SHOP_NAME = "SHRI DARIYAV ELECTRICALS AND DECORATION";
-const SHOP_GSTIN = "08JUSPS5893C1ZM";
+  // 4. GSTIN नंबर (बिना GST वाली फर्म के लिए इसे "" खाली छोड़ें)
+  GSTIN: "08JUSPS5893C1ZM",
+
+  // 5. बैंक खाता व UPI विवरण
+  BANK_NAME: "HDFC BANK",
+  BANK_ACC_NO: "50200100228274",
+  BANK_IFSC: "HDFC0002037",
+  UPI_ID: "7726923489-3@ybl"
+};
+
+// Aliases for unified internal access
+const PERMANENT_SCRIPT_URL = COMPANY_CONFIG.SCRIPT_URL;
+const SHOP_NAME = COMPANY_CONFIG.NAME;
+const SHOP_ADDRESS = COMPANY_CONFIG.ADDRESS;
+const SHOP_PHONE = COMPANY_CONFIG.PHONE;
+const SHOP_EMAIL = COMPANY_CONFIG.EMAIL;
+const SHOP_GSTIN = COMPANY_CONFIG.GSTIN;
+const SHOP_UPI_ID = COMPANY_CONFIG.UPI_ID;
+const HAS_SHOP_GST = (SHOP_GSTIN && SHOP_GSTIN.trim().length > 0);
 
 // 100% LIVE IN-MEMORY STORE (NO LOCAL STORAGE CACHING)
 let stock = [];
@@ -577,12 +654,16 @@ let invoices = [];
 let purchases = [];
 let ledgerTxns = [];
 let cart = [];
+let returnCart = [];
 let purchaseCart = [];
 let currentLedgerType = "Customer";
 let pendingDeleteTarget = null;
 
 // --- AUTHENTICATION ---
 function checkAuthOnLoad() {
+  document.getElementById('login-brand-title').innerText = SHOP_NAME;
+  document.getElementById('sidebar-brand-title').innerText = "⚡ " + SHOP_NAME;
+
   const currentSession = sessionStorage.getItem('erp_active_session');
   if (currentSession) {
     try {
@@ -660,6 +741,16 @@ function unlockApp(username) {
   document.getElementById('logged-username').innerText = username;
   document.getElementById('pur-date').value = new Date().toISOString().split('T')[0];
   document.getElementById('rec-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('ret-date').value = new Date().toISOString().split('T')[0];
+
+  // Auto-configure UI for Non-GST vs GST shop
+  if (!HAS_SHOP_GST) {
+    document.getElementById('lbl-bill-type-primary').innerText = "Invoice (Standard)";
+    document.getElementById('btn-gstr1-export').style.display = "none";
+    const gstinGroup = document.getElementById('group-cust-gstin');
+    if (gstinGroup) gstinGroup.style.display = "none";
+  }
+
   init();
 }
 
@@ -683,16 +774,16 @@ function onBillTypeChange() {
 }
 
 // --- DUAL BILL SERIES SYSTEM ---
-function getNextInvoiceNumber(isGst) {
-  if (isGst) {
-    const gstBills = invoices.filter(i => i.isGst);
-    if (gstBills.length === 0) return { num: 1001, display: "INV-1001" };
-    const maxNum = Math.max(...gstBills.map(i => i.seriesNumber || parseInt(String(i.invDisplayNo).replace(/\D/g,'')) || 1000));
+function getNextInvoiceNumber(billMode) {
+  if (billMode === 'INVOICE') {
+    const invBills = invoices.filter(i => String(i.invDisplayNo).toUpperCase().startsWith('INV-'));
+    if (invBills.length === 0) return { num: 1001, display: "INV-1001" };
+    const maxNum = Math.max(...invBills.map(i => parseInt(String(i.invDisplayNo).replace(/\D/g,'')) || 1000));
     return { num: maxNum + 1, display: "INV-" + (maxNum + 1) };
   } else {
-    const estBills = invoices.filter(i => !i.isGst);
+    const estBills = invoices.filter(i => String(i.invDisplayNo).toUpperCase().startsWith('EST-'));
     if (estBills.length === 0) return { num: 1001, display: "EST-1001" };
-    const maxNum = Math.max(...estBills.map(i => i.seriesNumber || parseInt(String(i.invDisplayNo).replace(/\D/g,'')) || 1000));
+    const maxNum = Math.max(...estBills.map(i => parseInt(String(i.invDisplayNo).replace(/\D/g,'')) || 1000));
     return { num: maxNum + 1, display: "EST-" + (maxNum + 1) };
   }
 }
@@ -700,8 +791,8 @@ function getNextInvoiceNumber(isGst) {
 function updateNextBillPreview() {
   const isEditing = document.getElementById('editing-invoice-id').value !== '';
   if (isEditing) return;
-  const isGst = document.querySelector('input[name="bill_type"]:checked').value === 'GST';
-  const nextInfo = getNextInvoiceNumber(isGst);
+  const billMode = document.querySelector('input[name="bill_type"]:checked').value;
+  const nextInfo = getNextInvoiceNumber(billMode);
   document.getElementById('bill-next-preview').innerText = `(Next: ${nextInfo.display})`;
 }
 
@@ -763,7 +854,7 @@ function validatePartyLedgerName() {
   const existingParty = invoices.find(i => (i.customer.name || '').trim().toLowerCase() === name.toLowerCase() && (i.customer.phone || '').trim() !== '');
   if (existingParty && phone && existingParty.customer.phone.trim() !== phone) {
     warn.style.display = 'block';
-    warn.innerText = `⚠️ Notice: Ledger "${name}" is already registered with mobile ${existingParty.customer.phone}. To maintain a separate khata, please add city/suffix (e.g. "${name} - Basni").`;
+    warn.innerText = `⚠️ Notice: Ledger "${name}" is already registered with mobile ${existingParty.customer.phone}. To maintain a separate khata, please add city/suffix.`;
     return false;
   } else {
     warn.style.display = 'none';
@@ -781,7 +872,16 @@ function handleCustomerSearchInput(val) {
     if (inv.customer && inv.customer.name && inv.customer.name !== 'Cash Customer') {
       const cName = inv.customer.name.trim();
       if (!customerMap[cName.toLowerCase()]) {
-        customerMap[cName.toLowerCase()] = { name: cName, phone: inv.customer.phone || '', address: inv.customer.address || '' };
+        customerMap[cName.toLowerCase()] = { name: cName, phone: inv.customer.phone || '', address: inv.customer.address || '', gstin: inv.customer.gstin || '' };
+      }
+    }
+  });
+
+  ledgerTxns.filter(t => t.partyType === 'Customer').forEach(lt => {
+    if (lt.party && lt.party !== 'Cash Customer') {
+      const cName = lt.party.trim();
+      if (!customerMap[cName.toLowerCase()]) {
+        customerMap[cName.toLowerCase()] = { name: cName, phone: '', address: '', gstin: '' };
       }
     }
   });
@@ -792,7 +892,7 @@ function handleCustomerSearchInput(val) {
   dropdown.innerHTML = matches.map(m => {
     const bal = getPartyCurrentBalance(m.name, 'Customer');
     return `
-      <div class="pos-item-row" onclick="selectCustomer('${m.name.replace(/'/g, "\\'")}', '${m.phone}', '${m.address.replace(/'/g, "\\'")}')">
+      <div class="pos-item-row" onclick="selectCustomer('${m.name.replace(/'/g, "\\'")}', '${m.phone}', '${m.address.replace(/'/g, "\\'")}', '${m.gstin || ''}')">
         <div>
           <span class="pos-item-name">${m.name}</span>
           <div class="pos-item-meta">📞 ${m.phone || 'No Phone'} | 📍 ${m.address || '-'}</div>
@@ -804,15 +904,16 @@ function handleCustomerSearchInput(val) {
   dropdown.style.display = 'block';
 }
 
-function selectCustomer(name, phone, addr) {
+function selectCustomer(name, phone, addr, gstin) {
   document.getElementById('cust-name').value = name;
   document.getElementById('cust-phone').value = phone;
   document.getElementById('cust-address').value = addr;
+  document.getElementById('cust-gstin').value = gstin || '';
   document.getElementById('cust-dropdown').style.display = 'none';
   validatePartyLedgerName();
 }
 
-// --- CENTRAL DATA SYNC ENGINE (100% REAL-TIME GOOGLE SHEET CONNECTION) ---
+// --- CENTRAL DATA SYNC ENGINE ---
 function syncAllData(showAlert = false) {
   const centralStatus = document.getElementById('sync-central-status');
   if (centralStatus) centralStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching live records from Google Sheet...';
@@ -888,6 +989,7 @@ function loadLedgerTxnsFromCloud() {
       if (Array.isArray(cloudT)) {
         ledgerTxns = cloudT;
         loadPartyLedger();
+        renderPartySelectOptions();
       }
     })
     .catch(() => {});
@@ -964,24 +1066,26 @@ function addItemToCartFromInputs() {
 function removeCart(idx) { cart.splice(idx, 1); updateCart(); }
 
 function updateCart() {
-  const isGst = document.querySelector('input[name="bill_type"]:checked').value === 'GST';
+  const billMode = document.querySelector('input[name="bill_type"]:checked').value;
+  const isTaxApplicable = (billMode === 'INVOICE') && HAS_SHOP_GST;
+  
   const tbody = document.querySelector('#cart-table tbody');
   tbody.innerHTML = '';
   
-  document.getElementById('th-taxable').style.display = isGst ? '' : 'none';
-  document.getElementById('th-gst').style.display = isGst ? '' : 'none';
-  document.getElementById('subtotal-row').style.display = isGst ? '' : 'none';
-  document.getElementById('gst-row').style.display = isGst ? '' : 'none';
+  document.getElementById('th-taxable').style.display = isTaxApplicable ? '' : 'none';
+  document.getElementById('th-gst').style.display = isTaxApplicable ? '' : 'none';
+  document.getElementById('subtotal-row').style.display = isTaxApplicable ? '' : 'none';
+  document.getElementById('gst-row').style.display = isTaxApplicable ? '' : 'none';
 
   let totalSubtotal = 0, totalTax = 0, grandTotal = 0;
 
   cart.forEach((c, idx) => {
-    const taxRate = isGst ? c.gst : 0;
+    const taxRate = isTaxApplicable ? c.gst : 0;
     const lineGrossTotal = c.price * c.qty;
     let taxable = lineGrossTotal;
     let taxVal = 0;
 
-    if (isGst && taxRate > 0) {
+    if (isTaxApplicable && taxRate > 0) {
       taxable = (lineGrossTotal * 100) / (100 + taxRate);
       taxVal = lineGrossTotal - taxable;
     }
@@ -999,8 +1103,8 @@ function updateCart() {
         <td>${c.warranty > 0 ? c.warranty + ' Mo' : '-'}</td>
         <td>${c.qty} ${c.unit}</td>
         <td>₹${c.price.toFixed(2)}</td>
-        ${isGst ? `<td>₹${taxable.toFixed(2)}</td>` : ''}
-        ${isGst ? `<td>${taxRate}%</td>` : ''}
+        ${isTaxApplicable ? `<td>₹${taxable.toFixed(2)}</td>` : ''}
+        ${isTaxApplicable ? `<td>${taxRate}%</td>` : ''}
         <td><strong>₹${lineGrossTotal.toFixed(2)}</strong></td>
         <td><button class="btn btn-danger" style="padding:3px 7px; font-size:11px;" onclick="removeCart(${idx})"><i class="fa-solid fa-trash"></i></button></td>
       </tr>
@@ -1019,8 +1123,11 @@ function saveAndPrintInvoice() {
     if (!confirm("This customer name already exists with another mobile number. Do you still wish to proceed?")) return;
   }
 
-  const isGst = document.querySelector('input[name="bill_type"]:checked').value === 'GST';
+  const billMode = document.querySelector('input[name="bill_type"]:checked').value;
+  const isTaxApplicable = (billMode === 'INVOICE') && HAS_SHOP_GST;
+  
   const name = document.getElementById('cust-name').value.trim() || 'Cash Customer';
+  const gstin = document.getElementById('cust-gstin').value.trim();
   const phone = document.getElementById('cust-phone').value.trim();
   const addr = document.getElementById('cust-address').value.trim() || 'Nagaur';
   const pay = document.getElementById('cust-paymode').value;
@@ -1033,7 +1140,7 @@ function saveAndPrintInvoice() {
   if (editingId) {
     invDisplayNo = editingDisplay;
   } else {
-    const nextSeries = getNextInvoiceNumber(isGst);
+    const nextSeries = getNextInvoiceNumber(billMode);
     seriesNum = nextSeries.num;
     invDisplayNo = nextSeries.display;
   }
@@ -1042,10 +1149,10 @@ function saveAndPrintInvoice() {
 
   let totalSubtotal = 0, totalTax = 0, grandTotal = 0;
   const itemsSnapshot = cart.map(c => {
-    const taxRate = isGst ? c.gst : 0;
+    const taxRate = isTaxApplicable ? c.gst : 0;
     const lineGrossTotal = c.price * c.qty;
     let taxable = lineGrossTotal, taxVal = 0;
-    if (isGst && taxRate > 0) {
+    if (isTaxApplicable && taxRate > 0) {
       taxable = (lineGrossTotal * 100) / (100 + taxRate);
       taxVal = lineGrossTotal - taxable;
     }
@@ -1055,14 +1162,21 @@ function saveAndPrintInvoice() {
     return { ...c, taxRate, taxable, taxVal, total: lineGrossTotal };
   });
 
+  let titleType = "";
+  if (billMode === 'INVOICE') {
+    titleType = HAS_SHOP_GST ? "TAX INVOICE" : "INVOICE";
+  } else {
+    titleType = "ESTIMATE";
+  }
+
   const invoiceRecord = {
     id: editingId ? parseInt(editingId) : Date.now(),
     seriesNumber: seriesNum,
     invDisplayNo: invDisplayNo,
-    type: isGst ? 'GST TAX INVOICE' : 'ESTIMATE',
-    isGst: isGst,
+    type: titleType,
+    isGst: isTaxApplicable,
     date: invDate,
-    customer: { name: name, phone: phone, address: addr },
+    customer: { name: name, gstin: gstin, phone: phone, address: addr },
     payMode: pay,
     subtotal: totalSubtotal,
     tax: totalTax,
@@ -1091,406 +1205,139 @@ function saveAndPrintInvoice() {
   showPrintModal(invoiceRecord);
 }
 
-// --- EDIT & DELETE SALES INVOICES ---
-function editInvoice(invDisplayNo) {
-  const inv = invoices.find(i => i.invDisplayNo === invDisplayNo);
+// --- SALES RETURN / CREDIT NOTE MODULE ---
+function loadBillItemsForReturn() {
+  const rawInput = document.getElementById('ret-bill-search').value.trim();
+  const choiceDropdown = document.getElementById('ret-choice-dropdown');
+  choiceDropdown.style.display = 'none';
+
+  if (!rawInput) return alert('Please enter invoice number (e.g. 1002, INV-1002, EST-1002)!');
+
+  const cleanInput = rawInput.toLowerCase().replace('#', '').trim();
+  const numericOnly = cleanInput.replace(/\D/g, '');
+
+  let matchedBills = invoices.filter(inv => {
+    const disp = String(inv.invDisplayNo || '').toLowerCase();
+    if (disp === cleanInput) return true;
+    if (numericOnly && disp.replace(/\D/g, '') === numericOnly) return true;
+    return false;
+  });
+
+  if (matchedBills.length === 0) {
+    return alert(`Bill "${rawInput}" not found! Please check Invoice History.`);
+  }
+
+  if (matchedBills.length > 1) {
+    choiceDropdown.innerHTML = `
+      <div style="padding:8px 12px; background:#eff6ff; font-weight:bold; font-size:12px; color:#1e3a8a; border-bottom:1px solid #bfdbfe;">
+        Multiple bills found for "${rawInput}". Please click to select:
+      </div>
+    ` + matchedBills.map(b => `
+      <div class="pos-item-row" onclick="applyBillToReturn('${b.invDisplayNo}')">
+        <div>
+          <strong style="color:${b.invDisplayNo.startsWith('INV-') ? '#1e3a8a' : '#f59e0b'}; font-size:13px;">${b.invDisplayNo}</strong> (${b.type})
+          <div class="pos-item-meta">👤 ${b.customer.name} | Date: ${b.date}</div>
+        </div>
+        <div style="font-weight:bold; color:#16a34a;">₹${b.grandTotal}</div>
+      </div>
+    `).join('');
+    choiceDropdown.style.display = 'block';
+    return;
+  }
+
+  applyBillToReturn(matchedBills[0].invDisplayNo);
+}
+
+function applyBillToReturn(billNo) {
+  const inv = invoices.find(i => String(i.invDisplayNo).toLowerCase() === String(billNo).toLowerCase());
+  document.getElementById('ret-choice-dropdown').style.display = 'none';
   if (!inv) return;
 
-  document.getElementById('editing-invoice-id').value = inv.id;
-  document.getElementById('editing-invoice-display').value = inv.invDisplayNo;
-  document.getElementById('billing-mode-title').innerText = `✏️ Modifying Bill ${inv.invDisplayNo}`;
-  document.getElementById('btn-save-bill').innerHTML = `<i class="fa-solid fa-check"></i> Update Bill ${inv.invDisplayNo}`;
-  document.getElementById('bill-next-preview').innerText = "";
-
-  document.querySelector(`input[name="bill_type"][value="${inv.isGst ? 'GST' : 'NON_GST'}"]`).checked = true;
-  document.getElementById('cust-name').value = inv.customer.name;
-  document.getElementById('cust-phone').value = inv.customer.phone || '';
-  document.getElementById('cust-address').value = inv.customer.address || '';
-  document.getElementById('cust-paymode').value = inv.payMode;
-
-  cart = [...inv.items];
-  updateCart();
-  switchTab('billing');
+  document.getElementById('ret-bill-search').value = inv.invDisplayNo;
+  document.getElementById('ret-cust-name').value = inv.customer.name;
+  returnCart = (inv.items || []).map(it => ({
+    code: it.code, name: it.name, hsn: it.hsn, unit: it.unit, rate: it.price, qty: it.qty, total: (it.price * it.qty)
+  }));
+  renderReturnTable();
 }
 
-function promptDeleteInvoice(invDisplayNo) {
-  pendingDeleteTarget = { type: 'sales', id: invDisplayNo };
-  document.getElementById('delete-modal-msg').innerText = `Deleting Sales Bill ${invDisplayNo} will restore item quantities back to inventory stock.`;
-  document.getElementById('delete-admin-pass').value = '';
-  document.getElementById('delete-error').innerText = '';
-  document.getElementById('delete-modal').style.display = 'flex';
-  document.getElementById('delete-admin-pass').focus();
-}
-
-function promptDeletePurchase(purId) {
-  pendingDeleteTarget = { type: 'purchase', id: purId };
-  document.getElementById('delete-modal-msg').innerText = `Deleting Purchase ${purId} will deduct inward quantities from inventory stock.`;
-  document.getElementById('delete-admin-pass').value = '';
-  document.getElementById('delete-error').innerText = '';
-  document.getElementById('delete-modal').style.display = 'flex';
-  document.getElementById('delete-admin-pass').focus();
-}
-
-function closeDeleteModal() {
-  document.getElementById('delete-modal').style.display = 'none';
-  pendingDeleteTarget = null;
-}
-
-function executeDeletionConfirmed() {
-  const pass = document.getElementById('delete-admin-pass').value.trim();
-  const err = document.getElementById('delete-error');
-  if (!pass) { err.innerText = "Please enter password!"; return; }
-
-  err.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing deletion on cloud...';
-
-  if (pendingDeleteTarget.type === 'sales') {
-    fetch(PERMANENT_SCRIPT_URL + `?action=delete_invoice&invoice_no=${encodeURIComponent(pendingDeleteTarget.id)}&admin_password=${encodeURIComponent(pass)}`)
-      .then(r => r.json())
-      .then(res => {
-        if (res.status === "success") {
-          invoices = invoices.filter(i => i.invDisplayNo !== pendingDeleteTarget.id);
-          closeDeleteModal();
-          renderHistoryTable();
-          syncInventoryStock();
-          updateNextBillPreview();
-          alert(`Sales Bill deleted and stock restored successfully!`);
-        } else {
-          err.innerText = res.message || "Failed to delete!";
-        }
-      }).catch(() => { err.innerText = "Connection error!"; });
-  } else if (pendingDeleteTarget.type === 'purchase') {
-    fetch(PERMANENT_SCRIPT_URL + `?action=delete_purchase&pur_id=${encodeURIComponent(pendingDeleteTarget.id)}&admin_password=${encodeURIComponent(pass)}`)
-      .then(r => r.json())
-      .then(res => {
-        if (res.status === "success") {
-          purchases = purchases.filter(p => ("PUR-" + p.id) !== pendingDeleteTarget.id);
-          closeDeleteModal();
-          renderPurchaseHistoryTable();
-          syncInventoryStock();
-          alert(`Purchase record deleted and stock deducted successfully!`);
-        } else {
-          err.innerText = res.message || "Failed to delete!";
-        }
-      }).catch(() => { err.innerText = "Connection error!"; });
-  }
-}
-
-// --- PURCHASE MODULE (CLEAN BILLING, GST LINKED FROM MASTER, + CREATE ITEM) ---
-function handlePurSearchInput(val) {
+function handleReturnSearchInput(val) {
   const query = val.trim().toLowerCase();
-  const dropdown = document.getElementById('pur-dropdown');
+  const dropdown = document.getElementById('ret-dropdown');
   if (!query) { dropdown.style.display = 'none'; return; }
 
   const matches = stock.filter(s => s.code.toLowerCase().includes(query) || s.name.toLowerCase().includes(query)).slice(0, 6);
   if (matches.length === 0) { dropdown.style.display = 'none'; return; }
 
   dropdown.innerHTML = matches.map(m => `
-    <div class="pos-item-row" onclick="selectPurItem('${m.name.replace(/'/g, "\\'")}', '${m.code}', ${m.purchase}, ${m.price}, ${m.gst})">
-      <div><span class="pos-item-code">[${m.code}]</span> <strong>${m.name}</strong> <span style="font-size:11px; color:#555;">(HSN:${m.hsn}, ${m.gst}%)</span></div>
-      <div>Cost: ₹${m.purchase}</div>
+    <div class="pos-item-row" onclick="addUnbilledReturnItem('${m.code}', '${m.name.replace(/'/g, "\\'")}', '${m.hsn}', '${m.unit}', ${m.price})">
+      <div><span class="pos-item-code">[${m.code}]</span> <strong>${m.name}</strong></div>
+      <div>Rate: ₹${m.price}</div>
     </div>
   `).join('');
   dropdown.style.display = 'block';
 }
 
-function selectPurItem(name, code, cost, price, gst) {
-  document.getElementById('pur-item-name').value = name;
-  document.getElementById('pur-item-code').value = code;
-  document.getElementById('pur-item-cost').value = cost;
-  document.getElementById('pur-item-price').value = price;
-  document.getElementById('pur-dropdown').style.display = 'none';
-  document.getElementById('pur-item-qty').focus();
+function addUnbilledReturnItem(code, name, hsn, unit, rate) {
+  returnCart.push({ code, name, hsn, unit, rate, qty: 1, total: rate });
+  document.getElementById('ret-dropdown').style.display = 'none';
+  document.getElementById('ret-item-search').value = '';
+  renderReturnTable();
 }
 
-function addPurchaseRow() {
-  const name = document.getElementById('pur-item-name').value.trim();
-  const code = document.getElementById('pur-item-code').value.trim() || ('ITM' + (stock.length + 1));
-  const qty = parseFloat(document.getElementById('pur-item-qty').value) || 0;
-  const cost = parseFloat(document.getElementById('pur-item-cost').value) || 0;
-  const price = parseFloat(document.getElementById('pur-item-price').value) || (cost * 1.2);
-
-  if (!name || qty <= 0 || cost <= 0) return alert('Enter valid item name, quantity and purchase rate!');
-
-  // Match GST and HSN from Master item if exists
-  const existingMaster = stock.find(s => s.code.toLowerCase() === code.toLowerCase() || s.name.toLowerCase() === name.toLowerCase());
-  const gst = existingMaster ? existingMaster.gst : 18;
-  const hsn = existingMaster ? existingMaster.hsn : "8536";
-
-  purchaseCart.push({ name, code, hsn, qty, cost, price, gst, total: (qty * cost) });
-  document.getElementById('pur-item-name').value = '';
-  document.getElementById('pur-item-code').value = '';
-  document.getElementById('pur-item-qty').value = '10';
-  document.getElementById('pur-item-cost').value = '';
-  document.getElementById('pur-item-price').value = '';
-  renderPurchaseTable();
-}
-
-function renderPurchaseTable() {
-  const tb = document.querySelector('#purchase-table tbody');
+function renderReturnTable() {
+  const tb = document.querySelector('#return-table tbody');
   tb.innerHTML = '';
   let gTot = 0;
-  purchaseCart.forEach((p, idx) => {
-    gTot += p.total;
-    tb.innerHTML += `<tr><td>${idx+1}</td><td>${p.code}</td><td>${p.name}</td><td>+${p.qty}</td><td>₹${p.cost}</td><td>₹${p.price}</td><td>₹${p.total.toFixed(2)}</td><td><button class="btn btn-danger" style="padding:2px 6px; font-size:11px;" onclick="purchaseCart.splice(${idx},1); renderPurchaseTable();">✕</button></td></tr>`;
-  });
-  document.getElementById('pur-grand-total').innerText = '₹' + gTot.toFixed(2);
-}
-
-function savePurchaseToCloud() {
-  if (purchaseCart.length === 0) return alert('Purchase list is empty!');
-  const supplier = document.getElementById('pur-supplier').value.trim() || 'Cash Purchase';
-  const refNo = document.getElementById('pur-ref').value.trim() || '-';
-  const remark = document.getElementById('pur-remark').value.trim() || '-';
-  const payMode = document.getElementById('pur-paymode').value;
-  const date = document.getElementById('pur-date').value;
-  const editId = document.getElementById('editing-purchase-id').value;
-
-  const purPayload = {
-    id: editId ? parseInt(editId) : Date.now(),
-    date: date,
-    supplier: supplier,
-    refNo: refNo,
-    payMode: payMode,
-    remark: remark,
-    total: purchaseCart.reduce((a,b)=>a+b.total, 0),
-    items: purchaseCart
-  };
-
-  fetch(PERMANENT_SCRIPT_URL + "?action=save_purchase&data=" + encodeURIComponent(JSON.stringify(purPayload)), { mode: 'no-cors' });
-
-  const existingIdx = purchases.findIndex(p => p.id === purPayload.id);
-  if (existingIdx >= 0) purchases[existingIdx] = purPayload;
-  else purchases.unshift(purPayload);
-
-  alert('Purchase recorded and synced to cloud inventory!');
-  purchaseCart = [];
-  document.getElementById('editing-purchase-id').value = '';
-  document.getElementById('pur-mode-title').innerHTML = '<i class="fa-solid fa-cart-flatbed" style="color:#16a34a;"></i> Inward Stock & Purchase Entry';
-  document.getElementById('pur-editing-badge').innerText = '';
-  document.getElementById('btn-save-pur').innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Save Purchase to Cloud';
-  renderPurchaseTable();
-  renderPurchaseHistoryTable();
-  syncInventoryStock();
-  document.getElementById('pur-supplier').value = '';
-  document.getElementById('pur-ref').value = '';
-  document.getElementById('pur-remark').value = '';
-}
-
-function editPurchase(purId) {
-  const p = purchases.find(x => x.id === purId || ("PUR-" + x.id) === purId);
-  if (!p) return;
-
-  document.getElementById('editing-purchase-id').value = p.id;
-  document.getElementById('pur-mode-title').innerHTML = `✏️ Editing Purchase PUR-${p.id}`;
-  document.getElementById('pur-editing-badge').innerText = `(Modifying Inward)`;
-  document.getElementById('btn-save-pur').innerHTML = `<i class="fa-solid fa-check"></i> Update Purchase PUR-${p.id}`;
-
-  document.getElementById('pur-supplier').value = p.supplier || '';
-  document.getElementById('pur-ref').value = p.refNo || '';
-  document.getElementById('pur-date').value = p.date || '';
-  document.getElementById('pur-paymode').value = p.payMode || 'Cash';
-  document.getElementById('pur-remark').value = p.remark || '';
-
-  purchaseCart = [...(p.items || [])];
-  renderPurchaseTable();
-  switchTab('purchase');
-}
-
-// --- UNIFIED INVOICE HISTORY CONTROLLERS ---
-function toggleHistoryView(view) {
-  document.getElementById('btn-show-sales-history').classList.toggle('active', view === 'sales');
-  document.getElementById('btn-show-pur-history').classList.toggle('active', view === 'purchase');
-  document.getElementById('history-sales-section').style.display = (view === 'sales') ? 'block' : 'none';
-  document.getElementById('history-purchase-section').style.display = (view === 'purchase') ? 'block' : 'none';
-}
-
-function getFilteredSalesInvoices() {
-  const from = document.getElementById('filter-sales-from').value;
-  const to = document.getElementById('filter-sales-to').value;
-  return invoices.filter(inv => {
-    if (!inv.date) return true;
-    if (from && inv.date < from) return false;
-    if (to && inv.date > to) return false;
-    return true;
-  });
-}
-
-function resetSalesDateFilter() {
-  document.getElementById('filter-sales-from').value = '';
-  document.getElementById('filter-sales-to').value = '';
-  renderHistoryTable();
-}
-
-function renderHistoryTable() {
-  const tbody = document.getElementById('history-rows');
-  tbody.innerHTML = '';
-  const list = getFilteredSalesInvoices();
-  const badge = document.getElementById('sales-filter-badge');
-  if (badge) badge.innerText = `Showing ${list.length} of ${invoices.length} Bills`;
-
-  list.forEach(inv => {
-    const displayNum = inv.invDisplayNo || ('#' + inv.id);
-    tbody.innerHTML += `
+  returnCart.forEach((it, idx) => {
+    const lineTot = it.qty * it.rate;
+    gTot += lineTot;
+    tb.innerHTML += `
       <tr>
-        <td><strong>${displayNum}</strong></td>
-        <td>${inv.isGst ? 'GST' : 'Estimate'}</td>
-        <td>${inv.date}</td>
-        <td>${inv.customer.name}</td>
-        <td>${inv.customer.phone || '-'}</td>
-        <td>${inv.payMode}</td>
-        <td>₹${inv.grandTotal}</td>
-        <td>
-          <button class="btn btn-warning" style="padding:2px 6px; font-size:11px;" onclick="showPrintModal(invoices.find(i=>(i.invDisplayNo||('#'+i.id))==='${displayNum}'))">Print</button>
-          <button class="btn btn-primary" style="padding:2px 6px; font-size:11px;" onclick="editInvoice('${displayNum}')">✏️ Edit</button>
-          <button class="btn btn-danger" style="padding:2px 6px; font-size:11px;" onclick="promptDeleteInvoice('${displayNum}')">🗑️ Delete</button>
-        </td>
-      </tr>`;
-  });
-}
-
-function getFilteredPurchaseInvoices() {
-  const from = document.getElementById('filter-pur-from').value;
-  const to = document.getElementById('filter-pur-to').value;
-  return purchases.filter(p => {
-    if (!p.date) return true;
-    if (from && p.date < from) return false;
-    if (to && p.date > to) return false;
-    return true;
-  });
-}
-
-function resetPurDateFilter() {
-  document.getElementById('filter-pur-from').value = '';
-  document.getElementById('filter-pur-to').value = '';
-  renderPurchaseHistoryTable();
-}
-
-function renderPurchaseHistoryTable() {
-  const tbody = document.getElementById('purchase-history-rows');
-  tbody.innerHTML = '';
-  const list = getFilteredPurchaseInvoices();
-  const badge = document.getElementById('pur-filter-badge');
-  if (badge) badge.innerText = `Showing ${list.length} of ${purchases.length} Purchases`;
-
-  list.forEach(p => {
-    const pItems = (p.items || []).map(it => `${it.name} (${it.qty}@₹${it.cost})`).join(', ');
-    tbody.innerHTML += `
-      <tr>
-        <td><strong>PUR-${p.id}</strong></td>
-        <td>${p.date}</td>
-        <td><strong>${p.supplier || 'Cash Purchase'}</strong></td>
-        <td>${p.refNo || '-'}</td>
-        <td style="color:#475569; font-style:italic;">${p.remark || '-'}</td>
-        <td style="font-weight:bold; color:#16a34a;">₹${p.total}</td>
-        <td style="font-size:12px; max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${pItems}</td>
-        <td>
-          <button class="btn btn-primary" style="padding:2px 6px; font-size:11px;" onclick="editPurchase(${p.id})">✏️ Edit</button>
-          <button class="btn btn-danger" style="padding:2px 6px; font-size:11px;" onclick="promptDeletePurchase('PUR-${p.id}')">🗑️ Delete</button>
-        </td>
+        <td>${idx + 1}</td>
+        <td><strong>${it.code || '-'}</strong></td>
+        <td>${it.name}</td>
+        <td><input type="number" value="${it.qty}" step="any" min="0.1" style="width:70px; padding:3px;" onchange="returnCart[${idx}].qty = parseFloat(this.value)||0; returnCart[${idx}].total = returnCart[${idx}].qty*${it.rate}; renderReturnTable();"></td>
+        <td>₹${it.rate.toFixed(2)}</td>
+        <td><strong>₹${lineTot.toFixed(2)}</strong></td>
+        <td><button class="btn btn-danger" style="padding:2px 6px; font-size:11px;" onclick="returnCart.splice(${idx},1); renderReturnTable();">✕</button></td>
       </tr>
     `;
   });
+  document.getElementById('ret-grand-total').innerText = '₹' + gTot.toFixed(2);
 }
 
-// --- EXPORT ENGINES ---
-function exportInvoicesToExcel() {
-  const list = getFilteredSalesInvoices();
-  if (list.length === 0) return alert("No sales invoices found for the selected date range!");
+function executeSaveSalesReturn() {
+  if (returnCart.length === 0) return alert('No items selected for return!');
+  const cust = document.getElementById('ret-cust-name').value.trim();
+  if (!cust) return alert('Please enter Customer Party Name!');
 
-  let csv = "\uFEFF";
-  csv += "Invoice No,Bill Type,Date,Customer Name,Phone,Address,Payment Mode,Taxable Value (Rs),CGST (Rs),SGST (Rs),Grand Total (Rs),Items Summary\n";
+  const retPayload = {
+    date: document.getElementById('ret-date').value || new Date().toISOString().split('T')[0],
+    customer: cust,
+    remark: document.getElementById('ret-remark').value.trim() || 'Sales Return',
+    total: returnCart.reduce((a,b)=>a + (b.qty * b.rate), 0),
+    items: returnCart
+  };
 
-  list.forEach(inv => {
-    const summary = (inv.items || []).map(i => `${i.name} (Qty:${i.qty}@${i.price})`).join('; ').replace(/"/g, '""');
-    csv += [
-      `"${inv.invDisplayNo}"`, `"${inv.type}"`, `"${inv.date}"`, `"${(inv.customer.name||'').replace(/"/g,'""')}"`,
-      `"${inv.customer.phone||'-'}"`, `"${(inv.customer.address||'').replace(/"/g,'""')}"`, `"${inv.payMode}"`,
-      inv.subtotal.toFixed(2), (inv.tax/2).toFixed(2), (inv.tax/2).toFixed(2), inv.grandTotal.toFixed(2), `"${summary}"`
-    ].join(",") + "\n";
-  });
+  fetch(PERMANENT_SCRIPT_URL + "?action=save_sales_return&data=" + encodeURIComponent(JSON.stringify(retPayload)), { mode: 'no-cors' });
 
-  downloadCsvBlob(csv, `Sales_Report_${new Date().toISOString().split('T')[0]}.csv`);
+  alert('Sales return accepted! Stock increased and ledger credited successfully.');
+  returnCart = [];
+  renderReturnTable();
+  syncInventoryStock();
+  loadLedgerTxnsFromCloud();
+  switchTab('ledger');
 }
 
-function exportPurchasesToExcel() {
-  const list = getFilteredPurchaseInvoices();
-  if (list.length === 0) return alert("No purchases found for the selected date range!");
-
-  let csv = "\uFEFF";
-  csv += "Purchase ID,Date,Supplier Name,Supplier Bill No,Remarks,Total Amount (Rs),Items Summary\n";
-
-  list.forEach(p => {
-    const summary = (p.items || []).map(it => `${it.name} (Qty:${it.qty}@Cost:${it.cost})`).join('; ').replace(/"/g, '""');
-    csv += [
-      `"PUR-${p.id}"`, `"${p.date}"`, `"${(p.supplier||'').replace(/"/g,'""')}"`,
-      `"${(p.refNo||'').replace(/"/g,'""')}"`, `"${(p.remark||'').replace(/"/g,'""')}"`, p.total, `"${summary}"`
-    ].join(",") + "\n";
-  });
-
-  downloadCsvBlob(csv, `Purchase_Report_${new Date().toISOString().split('T')[0]}.csv`);
-}
-
-function downloadGstr1Excel() {
-  const list = getFilteredSalesInvoices().filter(i => i.isGst);
-  if (list.length === 0) return alert("No GST Tax Invoices found for the selected date range!");
-
-  let csv = "\uFEFF";
-  csv += "=== GSTR-1 TABLE 7: B2CS SUMMARY (Rate-Wise) ===\n";
-  csv += "GST Rate (%),Taxable Value (Rs),CGST Amount (Rs),SGST Amount (Rs),Total Tax (Rs)\n";
-
-  let rateMap = {};
-  let hsnMap = {};
-
-  list.forEach(inv => {
-    (inv.items || []).forEach(it => {
-      const rt = it.taxRate || 18;
-      if (!rateMap[rt]) rateMap[rt] = { taxable: 0, tax: 0 };
-      rateMap[rt].taxable += it.taxable;
-      rateMap[rt].tax += it.taxVal;
-
-      const hCode = it.hsn || '8536';
-      if (!hsnMap[hCode]) hsnMap[hCode] = { name: it.name, unit: it.unit || 'Pcs', qty: 0, taxable: 0, tax: 0, rate: rt };
-      hsnMap[hCode].qty += it.qty;
-      hsnMap[hCode].taxable += it.taxable;
-      hsnMap[hCode].tax += it.taxVal;
-    });
-  });
-
-  for (let r in rateMap) {
-    const obj = rateMap[r];
-    csv += `${r}%,${obj.taxable.toFixed(2)},${(obj.tax/2).toFixed(2)},${(obj.tax/2).toFixed(2)},${obj.tax.toFixed(2)}\n`;
-  }
-
-  csv += "\n=== GSTR-1 TABLE 12: HSN SUMMARY ===\n";
-  csv += "HSN Code,Description,UQC,Total Qty,Total Taxable Value (Rs),GST Rate,CGST (Rs),SGST (Rs),Total Tax (Rs)\n";
-
-  for (let h in hsnMap) {
-    const ho = hsnMap[h];
-    csv += `"${h}","${ho.name.replace(/"/g,'""')}","${ho.unit}",${ho.qty},${ho.taxable.toFixed(2)},${ho.rate}%,${(ho.tax/2).toFixed(2)},${(ho.tax/2).toFixed(2)},${ho.tax.toFixed(2)}\n`;
-  }
-
-  downloadCsvBlob(csv, `GSTR1_Report_${new Date().toISOString().split('T')[0]}.csv`);
-}
-
-function downloadCsvBlob(content, filename) {
-  const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-
-// --- TWO-WAY PARTY LEDGER MODULE (WITH DATE FILTER & A4 STATEMENT PRINT) ---
+// --- TWO-WAY PARTY LEDGER MODULE ---
 function switchLedgerType(type) {
   currentLedgerType = type;
   document.getElementById('btn-ledger-cust').classList.toggle('active', type === 'Customer');
   document.getElementById('btn-ledger-supp').classList.toggle('active', type === 'Supplier');
   document.getElementById('lbl-party-select').innerText = `Select ${type} Party`;
-  document.getElementById('btn-ledger-action').innerHTML = (type === 'Customer') ? '<i class="fa-solid fa-hand-holding-dollar"></i> Receive Payment' : '<i class="fa-solid fa-money-bill-wave"></i> Make Payment';
   renderPartySelectOptions();
+  cancelLedgerEdit();
   document.getElementById('ledger-details-box').style.display = 'none';
 }
 
@@ -1518,6 +1365,11 @@ function renderPartySelectOptions() {
   });
 }
 
+function onLedgerTypeSelectChange() {
+  const t = document.getElementById('rec-type-select').value;
+  document.getElementById('rec-mode').style.display = (t === 'OPENING') ? 'none' : 'inline-block';
+}
+
 function loadPartyLedger() {
   const party = document.getElementById('ledger-party-select').value;
   const box = document.getElementById('ledger-details-box');
@@ -1533,23 +1385,22 @@ function loadPartyLedger() {
 
   if (currentLedgerType === 'Customer') {
     invoices.filter(i => i.payMode === 'Credit' && (i.customer.name || '').trim().toLowerCase() === party.toLowerCase()).forEach(b => {
-      allTxns.push({ date: b.date, type: 'Credit Sale Bill', ref: b.invDisplayNo, notes: 'Goods Sold', debit: b.grandTotal, credit: 0 });
+      allTxns.push({ date: b.date, type: 'Credit Sale Bill', ref: b.invDisplayNo, notes: 'Goods Sold', debit: b.grandTotal, credit: 0, isSystem: true });
     });
   } else {
     purchases.filter(p => p.payMode === 'Credit' && (p.supplier || '').trim().toLowerCase() === party.toLowerCase()).forEach(p => {
-      allTxns.push({ date: p.date, type: 'Credit Purchase', ref: 'PUR-' + p.id, notes: p.remark || 'Inward Goods', debit: 0, credit: p.total });
+      allTxns.push({ date: p.date, type: 'Credit Purchase', ref: 'PUR-' + p.id, notes: p.remark || 'Inward Goods', debit: 0, credit: p.total, isSystem: true });
     });
   }
 
   ledgerTxns.filter(t => (t.party || '').trim().toLowerCase() === party.toLowerCase() && t.partyType === currentLedgerType).forEach(t => {
     if (!allTxns.some(x => x.ref === t.ref && x.type === t.type)) {
-      allTxns.push({ date: t.date, type: t.type, ref: t.ref, notes: t.note, debit: t.debit, credit: t.credit });
+      allTxns.push({ date: t.date, type: t.type, ref: t.ref, notes: t.note, debit: t.debit, credit: t.credit, isSystem: false });
     }
   });
 
   allTxns.sort((a,b) => new Date(a.date) - new Date(b.date));
 
-  // Compute opening balance before 'from' date if date filter applied
   let openingBal = 0;
   let filteredTxns = [];
 
@@ -1576,6 +1427,7 @@ function loadPartyLedger() {
         <td>-</td>
         <td>-</td>
         <td><strong>₹${runningBal.toFixed(2)}</strong></td>
+        <td>-</td>
       </tr>
     `;
   }
@@ -1593,14 +1445,50 @@ function loadPartyLedger() {
         <td><strong>${t.type}</strong></td>
         <td>${t.ref}</td>
         <td style="color:#555; font-style:italic;">${t.notes || '-'}</td>
-        <td style="color:${t.debit > 0 ? '#dc2626' : '#555'};">${t.debit > 0 ? '₹' + t.debit : '-'}</td>
-        <td style="color:${t.credit > 0 ? '#16a34a' : '#555'};">${t.credit > 0 ? '₹' + t.credit : '-'}</td>
+        <td style="color:${t.debit > 0 ? '#dc2626' : '#555'}; font-weight:${t.debit > 0 ? 'bold' : 'normal'}">${t.debit > 0 ? '₹' + t.debit : '-'}</td>
+        <td style="color:${t.credit > 0 ? '#16a34a' : '#555'}; font-weight:${t.credit > 0 ? 'bold' : 'normal'}">${t.credit > 0 ? '₹' + t.credit : '-'}</td>
         <td><strong>₹${runningBal.toFixed(2)}</strong></td>
+        <td>
+          ${!t.isSystem ? `
+            <button class="btn btn-primary" style="padding:2px 6px; font-size:11px;" onclick="editLedgerTxn('${t.ref}')">✏️ Edit</button>
+            <button class="btn btn-danger" style="padding:2px 6px; font-size:11px;" onclick="promptDeleteLedgerTxn('${t.ref}')">🗑️</button>
+          ` : `<small style="color:#94a3b8;">Bill Auto</small>`}
+        </td>
       </tr>
     `;
   });
 
   document.getElementById('party-net-balance').innerText = `Net Balance: ₹${runningBal.toFixed(2)} (${runningBal > 0 ? (currentLedgerType === 'Customer' ? 'Due Receivable' : 'Due Payable') : 'Clear'})`;
+}
+
+function editLedgerTxn(ref) {
+  const txn = ledgerTxns.find(t => t.ref === ref);
+  if (!txn) return;
+
+  document.getElementById('editing-ledger-ref').value = txn.ref;
+  document.getElementById('rec-date').value = txn.date;
+  document.getElementById('rec-amount').value = (currentLedgerType === 'Customer' ? (txn.credit || txn.debit) : (txn.debit || txn.credit));
+  document.getElementById('rec-note').value = txn.note || '';
+  
+  if (txn.type.includes('Opening')) {
+    document.getElementById('rec-type-select').value = 'OPENING';
+  } else {
+    document.getElementById('rec-type-select').value = 'PAYMENT';
+  }
+  onLedgerTypeSelectChange();
+
+  document.getElementById('btn-ledger-action').innerHTML = '<i class="fa-solid fa-check"></i> Update Entry';
+  document.getElementById('btn-cancel-ledger-edit').style.display = 'inline-block';
+}
+
+function cancelLedgerEdit() {
+  document.getElementById('editing-ledger-ref').value = '';
+  document.getElementById('rec-amount').value = '';
+  document.getElementById('rec-note').value = '';
+  document.getElementById('rec-type-select').value = 'PAYMENT';
+  document.getElementById('btn-ledger-action').innerHTML = '<i class="fa-solid fa-check"></i> Post Entry';
+  document.getElementById('btn-cancel-ledger-edit').style.display = 'none';
+  onLedgerTypeSelectChange();
 }
 
 function saveCloudLedgerTransaction() {
@@ -1609,16 +1497,28 @@ function saveCloudLedgerTransaction() {
   const date = document.getElementById('rec-date').value || new Date().toISOString().split('T')[0];
   const mode = document.getElementById('rec-mode').value;
   const note = document.getElementById('rec-note').value.trim();
+  const entryType = document.getElementById('rec-type-select').value;
+  const editRef = document.getElementById('editing-ledger-ref').value;
 
   if (!party || !amt || amt <= 0) return alert('Enter a valid payment amount!');
 
   let debitVal = 0, creditVal = 0, txnType = "";
-  if (currentLedgerType === 'Customer') {
-    txnType = "Payment In (" + mode + ")";
-    creditVal = amt;
+
+  if (entryType === 'OPENING') {
+    txnType = "Opening Balance";
+    if (currentLedgerType === 'Customer') {
+      debitVal = amt;
+    } else {
+      creditVal = amt;
+    }
   } else {
-    txnType = "Payment Out (" + mode + ")";
-    debitVal = amt;
+    if (currentLedgerType === 'Customer') {
+      txnType = "Payment In (" + mode + ")";
+      creditVal = amt;
+    } else {
+      txnType = "Payment Out (" + mode + ")";
+      debitVal = amt;
+    }
   }
 
   const txnPayload = {
@@ -1626,7 +1526,7 @@ function saveCloudLedgerTransaction() {
     party: party,
     partyType: currentLedgerType,
     type: txnType,
-    ref: 'PAY-' + Math.floor(1000 + Math.random() * 9000),
+    ref: editRef ? editRef : ('PAY-' + Math.floor(1000 + Math.random() * 9000)),
     debit: debitVal,
     credit: creditVal,
     note: note || mode
@@ -1634,43 +1534,209 @@ function saveCloudLedgerTransaction() {
 
   fetch(PERMANENT_SCRIPT_URL + "?action=save_ledger_txn&data=" + encodeURIComponent(JSON.stringify(txnPayload)), { mode: 'no-cors' });
 
-  ledgerTxns.push(txnPayload);
-  document.getElementById('rec-amount').value = '';
-  document.getElementById('rec-note').value = '';
+  const exIdx = ledgerTxns.findIndex(t => t.ref === txnPayload.ref);
+  if (exIdx >= 0) ledgerTxns[exIdx] = txnPayload;
+  else ledgerTxns.push(txnPayload);
+
+  cancelLedgerEdit();
   loadPartyLedger();
-  alert('Payment transaction posted and synced to Google Sheet!');
+  alert('Ledger entry saved and synced to Google Sheet!');
+}
+
+function promptDeleteLedgerTxn(ref) {
+  pendingDeleteTarget = { type: 'ledger', id: ref };
+  document.getElementById('delete-modal-msg').innerText = `Deleting ledger entry ${ref} will remove it from party statement.`;
+  document.getElementById('delete-admin-pass').value = '';
+  document.getElementById('delete-error').innerText = '';
+  document.getElementById('delete-modal').style.display = 'flex';
+  document.getElementById('delete-admin-pass').focus();
+}
+
+// --- TALLY-GRADE CLEAN PRINT FOR LEDGER STATEMENT ---
+function formatDateShort(dateStr) {
+  if (!dateStr) return '-';
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr.split('T')[0];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const day = ('0' + d.getDate()).slice(-2);
+  const m = months[d.getMonth()];
+  const y = String(d.getFullYear()).slice(-2);
+  return `${day}-${m}-${y}`;
 }
 
 function printLedgerStatement() {
   const party = document.getElementById('ledger-party-select').value;
-  if (!party) return;
-  const tableContent = document.getElementById('party-txn-table').outerHTML;
-  const netBalText = document.getElementById('party-net-balance').innerText;
+  if (!party) return alert("Please select a party first!");
+
+  const from = document.getElementById('filter-ledger-from').value;
+  const to = document.getElementById('filter-ledger-to').value;
+
+  let allTxns = [];
+  if (currentLedgerType === 'Customer') {
+    invoices.filter(i => i.payMode === 'Credit' && (i.customer.name || '').trim().toLowerCase() === party.toLowerCase()).forEach(b => {
+      allTxns.push({ date: b.date, type: (b.isGst ? 'Sales GST' : 'Sales Retail'), ref: b.invDisplayNo, debit: b.grandTotal, credit: 0 });
+    });
+  } else {
+    purchases.filter(p => p.payMode === 'Credit' && (p.supplier || '').trim().toLowerCase() === party.toLowerCase()).forEach(p => {
+      allTxns.push({ date: p.date, type: 'Purchase', ref: 'PUR-' + p.id, debit: 0, credit: p.total });
+    });
+  }
+
+  ledgerTxns.filter(t => (t.party || '').trim().toLowerCase() === party.toLowerCase() && t.partyType === currentLedgerType).forEach(t => {
+    if (!allTxns.some(x => x.ref === t.ref && x.type === t.type)) {
+      allTxns.push({ date: t.date, type: t.type, ref: t.ref, debit: t.debit, credit: t.credit });
+    }
+  });
+
+  allTxns.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+  let openingBal = 0;
+  let filteredTxns = [];
+
+  allTxns.forEach(t => {
+    if (from && t.date < from) {
+      if (currentLedgerType === 'Customer') openingBal += (t.debit - t.credit);
+      else openingBal += (t.credit - t.debit);
+    } else if (!to || t.date <= to) {
+      filteredTxns.push(t);
+    }
+  });
+
+  let runningBal = openingBal;
+  let totalDebit = 0;
+  let totalCredit = 0;
+
+  let rowsHtml = '';
+  if (openingBal !== 0 || from) {
+    const balTag = (runningBal >= 0) ? (currentLedgerType === 'Customer' ? 'Dr' : 'Cr') : (currentLedgerType === 'Customer' ? 'Cr' : 'Dr');
+    rowsHtml += `
+      <tr>
+        <td style="padding:4px 6px;">${from ? formatDateShort(from) : '-'}</td>
+        <td style="padding:4px 6px;"><strong>Opening Balance</strong></td>
+        <td style="padding:4px 6px;">-</td>
+        <td style="padding:4px 6px;">-</td>
+        <td style="padding:4px 6px; text-align:right;">${openingBal > 0 ? openingBal.toFixed(2) : ''}</td>
+        <td style="padding:4px 6px; text-align:right;">${openingBal < 0 ? Math.abs(openingBal).toFixed(2) : ''}</td>
+        <td style="padding:4px 6px; text-align:right;"><strong>${Math.abs(runningBal).toFixed(2)} ${balTag}</strong></td>
+      </tr>
+    `;
+    if (openingBal > 0) totalDebit += openingBal;
+    else totalCredit += Math.abs(openingBal);
+  }
+
+  filteredTxns.forEach(t => {
+    totalDebit += (t.debit || 0);
+    totalCredit += (t.credit || 0);
+
+    if (currentLedgerType === 'Customer') runningBal += (t.debit - t.credit);
+    else runningBal += (t.credit - t.debit);
+
+    const balTag = (runningBal >= 0) ? (currentLedgerType === 'Customer' ? 'Dr' : 'Cr') : (currentLedgerType === 'Customer' ? 'Cr' : 'Dr');
+
+    rowsHtml += `
+      <tr>
+        <td style="padding:4px 6px;">${formatDateShort(t.date)}</td>
+        <td style="padding:4px 6px;"><strong>${t.type}</strong></td>
+        <td style="padding:4px 6px;">Retail</td>
+        <td style="padding:4px 6px;">${t.ref || '-'}</td>
+        <td style="padding:4px 6px; text-align:right;">${t.debit > 0 ? t.debit.toFixed(2) : ''}</td>
+        <td style="padding:4px 6px; text-align:right;">${t.credit > 0 ? t.credit.toFixed(2) : ''}</td>
+        <td style="padding:4px 6px; text-align:right;"><strong>${Math.abs(runningBal).toFixed(2)} ${balTag}</strong></td>
+      </tr>
+    `;
+  });
+
+  const finalBalTag = (runningBal >= 0) ? (currentLedgerType === 'Customer' ? 'Dr' : 'Cr') : (currentLedgerType === 'Customer' ? 'Cr' : 'Dr');
+  const dateRangeText = (from || to) ? `${from ? formatDateShort(from) : 'Start'} to ${to ? formatDateShort(to) : formatDateShort(new Date())}` : `As on ${formatDateShort(new Date())}`;
+
+  let finalDrBox = totalDebit;
+  let finalCrBox = totalCredit;
+  let closingRowHtml = '';
+
+  if (runningBal > 0) {
+    finalCrBox += runningBal;
+    closingRowHtml = `
+      <tr>
+        <td colspan="4" style="text-align:right; font-weight:bold; padding:6px;">${finalBalTag} Closing Balance</td>
+        <td style="padding:6px; text-align:right;"></td>
+        <td style="padding:6px; text-align:right; font-weight:bold;">${Math.abs(runningBal).toFixed(2)}</td>
+        <td style="padding:6px; text-align:right; font-weight:bold;">${Math.abs(runningBal).toFixed(2)} ${finalBalTag}</td>
+      </tr>
+    `;
+  } else if (runningBal < 0) {
+    finalDrBox += Math.abs(runningBal);
+    closingRowHtml = `
+      <tr>
+        <td colspan="4" style="text-align:right; font-weight:bold; padding:6px;">${finalBalTag} Closing Balance</td>
+        <td style="padding:6px; text-align:right; font-weight:bold;">${Math.abs(runningBal).toFixed(2)}</td>
+        <td style="padding:6px; text-align:right;"></td>
+        <td style="padding:6px; text-align:right; font-weight:bold;">${Math.abs(runningBal).toFixed(2)} ${finalBalTag}</td>
+      </tr>
+    `;
+  }
 
   const w = window.open('', '_blank');
   w.document.write(`
+    <!DOCTYPE html>
     <html>
     <head>
       <title>Ledger Statement - ${party}</title>
       <style>
-        body { font-family: Arial, sans-serif; padding: 20px; color: #000; }
-        .hdr { text-align: center; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 12px; }
-        .hdr h2 { margin: 0; font-size: 18px; }
-        .hdr p { margin: 3px 0; font-size: 11px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #333; padding: 5px 8px; font-size: 11.5px; text-align: left; }
-        th { background: #f2f2f2; font-weight: bold; }
-        .bal { margin-top: 15px; font-size: 14px; font-weight: bold; text-align: right; }
+        @page { size: A4 portrait; margin: 8mm; }
+        body { font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #000; margin: 0; padding: 10px; line-height: 1.3; }
+        .hdr { text-align: center; margin-bottom: 12px; }
+        .hdr-title { font-size: 16px; font-weight: bold; margin: 0; }
+        .hdr-sub { font-size: 11px; color: #333; margin: 2px 0; }
+        .party-box { text-align: center; margin: 10px 0 14px 0; }
+        .party-name { font-size: 14.5px; font-weight: bold; }
+        .party-sub { font-size: 11px; text-decoration: underline; margin-top: 1px; }
+        .date-bar { display: flex; justify-content: space-between; font-size: 10.5px; font-weight: bold; border-top: 1px solid #000; padding: 4px 2px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 2px; font-size: 11px; }
+        th { border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 5px 6px; font-weight: bold; text-align: left; }
+        td { border-bottom: 1px solid #e2e8f0; }
+        .closing-box td { border-top: 1px solid #000; border-bottom: 3px double #000; font-weight: bold; padding: 6px; }
       </style>
     </head>
     <body onload="window.print()">
       <div class="hdr">
-        <h2>${SHOP_NAME}</h2>
-        <p>STATEMENT OF ACCOUNT (${currentLedgerType.toUpperCase()})</p>
-        <p><strong>Party: ${party}</strong> | Date Generated: ${new Date().toLocaleDateString()}</p>
+        <div class="hdr-title">${SHOP_NAME}</div>
+        <div class="hdr-sub">${SHOP_ADDRESS}</div>
+        <div class="hdr-sub">Contact: ${SHOP_PHONE} ${SHOP_EMAIL ? '| E-Mail: ' + SHOP_EMAIL : ''}</div>
       </div>
-      ${tableContent}
-      <div class="bal">${netBalText}</div>
+
+      <div class="party-box">
+        <div class="party-name">${party}</div>
+        <div class="party-sub">Ledger Account</div>
+      </div>
+
+      <div class="date-bar">
+        <span>${dateRangeText}</span>
+        <span>Page 1</span>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width:12%;">Date</th>
+            <th style="width:28%;">Particulars</th>
+            <th style="width:12%;">Vch Type</th>
+            <th style="width:14%;">Vch No.</th>
+            <th style="width:11%; text-align:right;">Debit</th>
+            <th style="width:11%; text-align:right;">Credit</th>
+            <th style="width:12%; text-align:right;">Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHtml}
+          ${closingRowHtml}
+          <tr class="closing-box">
+            <td colspan="4"></td>
+            <td style="text-align:right;">₹${finalDrBox.toFixed(2)}</td>
+            <td style="text-align:right;">₹${finalCrBox.toFixed(2)}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
     </body>
     </html>
   `);
@@ -1786,18 +1852,15 @@ function closeStockAuditModal() {
   document.getElementById('stock-audit-modal').style.display = 'none';
 }
 
-// --- TALLY & BUSY EXACT STANDARD INVOICE PRINT ENGINE (DYNAMIC PAGINATION) ---
+// --- TALLY & BUSY PRINT ENGINE ---
 function showPrintModal(inv) {
   const container = document.getElementById('invoice-printable-container');
   container.innerHTML = '';
 
-  const isGst = inv.isGst;
+  const isGst = inv.isGst && HAS_SHOP_GST;
   const items = inv.items || [];
   const totalItems = items.length;
 
-  // DYNAMIC PAGINATION RULE:
-  // Up to 22 items: 1 Single Page with Full Footer.
-  // Above 22 items: Page 1 holds 28-30 items, remaining spill to Page 2 with Footer.
   let pages = [];
   if (totalItems <= 22) {
     pages.push(items);
@@ -1831,22 +1894,22 @@ function showPrintModal(inv) {
     const pageDiv = document.createElement('div');
     pageDiv.className = 'invoice-page';
 
-    // Header (Exact Sizes)
     let headerHtml = `
       <div>
         <div class="t-header">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:10px; color:#555;">Page ${p + 1} of ${totalPages}</span>
-            <div class="t-title">${isGst ? 'TAX INVOICE' : 'ESTIMATE'}</div>
-            <span style="font-size:10px; color:#555;">Original for Recipient</span>
+          <div class="t-header-topline">
+            <div style="font-size:10px; color:#555; text-align:left;">Page ${p + 1} of ${totalPages}</div>
+            <div class="t-title">${inv.type}</div>
+            <div style="font-size:10px; color:#555; text-align:right;">Original for Recipient</div>
           </div>
           <div class="t-company-name">${SHOP_NAME}</div>
-          <div class="t-company-address">DELHI GETA A ROAD RATHOR BHAWAN NAGAUR RAJ - 341001</div>
-          <div class="t-company-address">Mob: +91 7726923489, 7014248846 ${isGst ? '| GSTIN: ' + SHOP_GSTIN : ''}</div>
+          <div class="t-company-address">${SHOP_ADDRESS}</div>
+          <div class="t-company-address">Mob: ${SHOP_PHONE} ${HAS_SHOP_GST ? '| GSTIN: ' + SHOP_GSTIN : ''}</div>
         </div>
         <div class="t-row border-b">
           <div class="t-col-6 border-r">
             <div>Billed To: <span class="t-cust-name">${inv.customer.name}</span></div>
+            ${inv.customer.gstin ? `<div>Customer GSTIN: <strong>${inv.customer.gstin}</strong></div>` : ''}
             <div>Phone: ${inv.customer.phone || '-'}</div>
             <div>Address: ${inv.customer.address || '-'}</div>
           </div>
@@ -1859,7 +1922,6 @@ function showPrintModal(inv) {
       </div>
     `;
 
-    // Table
     let tableHtml = `
       <div style="flex:1 1 auto; display:flex; flex-direction:column; border-bottom:1.5px solid #000;">
         <table class="t-table">
@@ -1889,14 +1951,9 @@ function showPrintModal(inv) {
       overallIdxCounter++;
       pageCarriedTotal += it.total;
 
-      // Conditional SN and Warranty string
       let metaDetails = [];
-      if (it.sn && it.sn !== '-' && it.sn.trim() !== '') {
-        metaDetails.push(`SN: ${it.sn}`);
-      }
-      if (it.warranty && parseInt(it.warranty) > 0) {
-        metaDetails.push(`War: ${it.warranty}Mo`);
-      }
+      if (it.sn && it.sn !== '-' && it.sn.trim() !== '') metaDetails.push(`SN: ${it.sn}`);
+      if (it.warranty && parseInt(it.warranty) > 0) metaDetails.push(`War: ${it.warranty}Mo`);
       const metaStr = metaDetails.length > 0 ? `<small style="color:#555; font-size:10px;"> | ${metaDetails.join(' | ')}</small>` : '';
 
       tableHtml += `
@@ -1926,7 +1983,6 @@ function showPrintModal(inv) {
       </div>
     `;
 
-    // Footer
     let footerHtml = `<div>`;
     if (isLastPage) {
       if (isGst) {
@@ -1961,11 +2017,11 @@ function showPrintModal(inv) {
         <div class="t-row">
           <div class="t-col-6 border-r" style="font-size:10px; display:flex; gap:8px; align-items:center;">
             <div>
-              <strong>Bank Details:</strong> HDFC BANK<br>
-              A/c No.: <strong>50200100228274</strong><br>
-              IFSC: <strong>HDFC0002037</strong><br>
+              <strong>Bank Details:</strong> ${COMPANY_CONFIG.BANK_NAME}<br>
+              A/c No.: <strong>${COMPANY_CONFIG.BANK_ACC_NO}</strong><br>
+              IFSC: <strong>${COMPANY_CONFIG.BANK_IFSC}</strong><br>
               UPI ID: <strong>${SHOP_UPI_ID}</strong><br>
-              <small style="color:#555;">Terms: Warranty claims subject to authorized service center terms.</small>
+              <small style="color:#555;">Terms: Goods once sold will be exchanged or credited as per policy.</small>
             </div>
             <div style="text-align:center; padding-left:6px; border-left:1px dashed #ccc;">
               <img src="${qrCodeUrl}" alt="UPI QR" style="width:65px; height:65px; border:1px solid #999; display:block; margin:auto;">
@@ -2000,6 +2056,411 @@ function closePrint() {
   document.getElementById('pos-search-input').focus();
 }
 
+// --- HISTORY & PURCHASE LOGS ---
+function toggleHistoryView(view) {
+  document.getElementById('btn-show-sales-history').classList.toggle('active', view === 'sales');
+  document.getElementById('btn-show-pur-history').classList.toggle('active', view === 'purchase');
+  document.getElementById('history-sales-section').style.display = (view === 'sales') ? 'block' : 'none';
+  document.getElementById('history-purchase-section').style.display = (view === 'purchase') ? 'block' : 'none';
+}
+
+function getFilteredSalesInvoices() {
+  const from = document.getElementById('filter-sales-from').value;
+  const to = document.getElementById('filter-sales-to').value;
+  return invoices.filter(inv => {
+    if (!inv.date) return true;
+    if (from && inv.date < from) return false;
+    if (to && inv.date > to) return false;
+    return true;
+  });
+}
+
+function resetSalesDateFilter() {
+  document.getElementById('filter-sales-from').value = '';
+  document.getElementById('filter-sales-to').value = '';
+  renderHistoryTable();
+}
+
+function renderHistoryTable() {
+  const tbody = document.getElementById('history-rows');
+  tbody.innerHTML = '';
+  const list = getFilteredSalesInvoices();
+  const badge = document.getElementById('sales-filter-badge');
+  if (badge) badge.innerText = `Showing ${list.length} of ${invoices.length} Bills`;
+
+  list.forEach(inv => {
+    const displayNum = inv.invDisplayNo || ('#' + inv.id);
+    tbody.innerHTML += `
+      <tr>
+        <td><strong>${displayNum}</strong></td>
+        <td>${inv.type}</td>
+        <td>${inv.date}</td>
+        <td>${inv.customer.name}</td>
+        <td>${inv.customer.phone || '-'}</td>
+        <td>${inv.payMode}</td>
+        <td>₹${inv.grandTotal}</td>
+        <td>
+          <button class="btn btn-warning" style="padding:2px 6px; font-size:11px;" onclick="showPrintModal(invoices.find(i=>(i.invDisplayNo||('#'+i.id))==='${displayNum}'))">Print</button>
+          <button class="btn btn-primary" style="padding:2px 6px; font-size:11px;" onclick="editInvoice('${displayNum}')">✏️ Edit</button>
+          <button class="btn btn-danger" style="padding:2px 6px; font-size:11px;" onclick="promptDeleteInvoice('${displayNum}')">🗑️ Delete</button>
+        </td>
+      </tr>`;
+  });
+}
+
+function editInvoice(invDisplayNo) {
+  const inv = invoices.find(i => i.invDisplayNo === invDisplayNo);
+  if (!inv) return;
+
+  document.getElementById('editing-invoice-id').value = inv.id;
+  document.getElementById('editing-invoice-display').value = inv.invDisplayNo;
+  document.getElementById('billing-mode-title').innerText = `✏️ Modifying Bill ${inv.invDisplayNo}`;
+  document.getElementById('btn-save-bill').innerHTML = `<i class="fa-solid fa-check"></i> Update Bill ${inv.invDisplayNo}`;
+  document.getElementById('bill-next-preview').innerText = "";
+
+  const isEst = inv.invDisplayNo.startsWith('EST-') || inv.type === 'ESTIMATE';
+  document.querySelector(`input[name="bill_type"][value="${isEst ? 'ESTIMATE' : 'INVOICE'}"]`).checked = true;
+  document.getElementById('cust-name').value = inv.customer.name;
+  document.getElementById('cust-gstin').value = inv.customer.gstin || '';
+  document.getElementById('cust-phone').value = inv.customer.phone || '';
+  document.getElementById('cust-address').value = inv.customer.address || '';
+  document.getElementById('cust-paymode').value = inv.payMode;
+
+  cart = [...inv.items];
+  updateCart();
+  switchTab('billing');
+}
+
+function promptDeleteInvoice(invDisplayNo) {
+  pendingDeleteTarget = { type: 'sales', id: invDisplayNo };
+  document.getElementById('delete-modal-msg').innerText = `Deleting Sales Bill ${invDisplayNo} will restore item quantities back to inventory stock.`;
+  document.getElementById('delete-admin-pass').value = '';
+  document.getElementById('delete-error').innerText = '';
+  document.getElementById('delete-modal').style.display = 'flex';
+  document.getElementById('delete-admin-pass').focus();
+}
+
+function promptDeletePurchase(purId) {
+  pendingDeleteTarget = { type: 'purchase', id: purId };
+  document.getElementById('delete-modal-msg').innerText = `Deleting Purchase ${purId} will deduct inward quantities from inventory stock.`;
+  document.getElementById('delete-admin-pass').value = '';
+  document.getElementById('delete-error').innerText = '';
+  document.getElementById('delete-modal').style.display = 'flex';
+  document.getElementById('delete-admin-pass').focus();
+}
+
+function closeDeleteModal() {
+  document.getElementById('delete-modal').style.display = 'none';
+  pendingDeleteTarget = null;
+}
+
+function executeDeletionConfirmed() {
+  const pass = document.getElementById('delete-admin-pass').value.trim();
+  const err = document.getElementById('delete-error');
+  if (!pass) { err.innerText = "Please enter password!"; return; }
+
+  err.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing deletion on cloud...';
+
+  if (pendingDeleteTarget.type === 'sales') {
+    fetch(PERMANENT_SCRIPT_URL + `?action=delete_invoice&invoice_no=${encodeURIComponent(pendingDeleteTarget.id)}&admin_password=${encodeURIComponent(pass)}`)
+      .then(r => r.json())
+      .then(res => {
+        if (res.status === "success") {
+          invoices = invoices.filter(i => i.invDisplayNo !== pendingDeleteTarget.id);
+          closeDeleteModal();
+          renderHistoryTable();
+          syncInventoryStock();
+          updateNextBillPreview();
+          alert(`Sales Bill deleted and stock restored successfully!`);
+        } else {
+          err.innerText = res.message || "Failed to delete!";
+        }
+      }).catch(() => { err.innerText = "Connection error!"; });
+  } else if (pendingDeleteTarget.type === 'purchase') {
+    fetch(PERMANENT_SCRIPT_URL + `?action=delete_purchase&pur_id=${encodeURIComponent(pendingDeleteTarget.id)}&admin_password=${encodeURIComponent(pass)}`)
+      .then(r => r.json())
+      .then(res => {
+        if (res.status === "success") {
+          purchases = purchases.filter(p => ("PUR-" + p.id) !== pendingDeleteTarget.id);
+          closeDeleteModal();
+          renderPurchaseHistoryTable();
+          syncInventoryStock();
+          alert(`Purchase record deleted and stock deducted successfully!`);
+        } else {
+          err.innerText = res.message || "Failed to delete!";
+        }
+      }).catch(() => { err.innerText = "Connection error!"; });
+  } else if (pendingDeleteTarget.type === 'ledger') {
+    fetch(PERMANENT_SCRIPT_URL + `?action=delete_ledger_txn&ref=${encodeURIComponent(pendingDeleteTarget.id)}&admin_password=${encodeURIComponent(pass)}`)
+      .then(r => r.json())
+      .then(res => {
+        if (res.status === "success") {
+          ledgerTxns = ledgerTxns.filter(t => t.ref !== pendingDeleteTarget.id);
+          closeDeleteModal();
+          loadPartyLedger();
+          alert(`Ledger transaction removed successfully!`);
+        } else {
+          err.innerText = res.message || "Failed to delete!";
+        }
+      }).catch(() => { err.innerText = "Connection error!"; });
+  }
+}
+
+// --- PURCHASE FUNCTIONS ---
+function handlePurSearchInput(val) {
+  const query = val.trim().toLowerCase();
+  const dropdown = document.getElementById('pur-dropdown');
+  if (!query) { dropdown.style.display = 'none'; return; }
+
+  const matches = stock.filter(s => s.code.toLowerCase().includes(query) || s.name.toLowerCase().includes(query)).slice(0, 6);
+  if (matches.length === 0) { dropdown.style.display = 'none'; return; }
+
+  dropdown.innerHTML = matches.map(m => `
+    <div class="pos-item-row" onclick="selectPurItem('${m.name.replace(/'/g, "\\'")}', '${m.code}', ${m.purchase}, ${m.price}, ${m.gst})">
+      <div><span class="pos-item-code">[${m.code}]</span> <strong>${m.name}</strong> <span style="font-size:11px; color:#555;">(HSN:${m.hsn}, ${m.gst}%)</span></div>
+      <div>Cost: ₹${m.purchase}</div>
+    </div>
+  `).join('');
+  dropdown.style.display = 'block';
+}
+
+function selectPurItem(name, code, cost, price, gst) {
+  document.getElementById('pur-item-name').value = name;
+  document.getElementById('pur-item-code').value = code;
+  document.getElementById('pur-item-cost').value = cost;
+  document.getElementById('pur-item-price').value = price;
+  document.getElementById('pur-dropdown').style.display = 'none';
+  document.getElementById('pur-item-qty').focus();
+}
+
+function addPurchaseRow() {
+  const name = document.getElementById('pur-item-name').value.trim();
+  const code = document.getElementById('pur-item-code').value.trim() || ('ITM' + (stock.length + 1));
+  const qty = parseFloat(document.getElementById('pur-item-qty').value) || 0;
+  const cost = parseFloat(document.getElementById('pur-item-cost').value) || 0;
+  const price = parseFloat(document.getElementById('pur-item-price').value) || (cost * 1.2);
+
+  if (!name || qty <= 0 || cost <= 0) return alert('Enter valid item name, quantity and purchase rate!');
+
+  const existingMaster = stock.find(s => s.code.toLowerCase() === code.toLowerCase() || s.name.toLowerCase() === name.toLowerCase());
+  const gst = existingMaster ? existingMaster.gst : 18;
+  const hsn = existingMaster ? existingMaster.hsn : "8536";
+
+  purchaseCart.push({ name, code, hsn, qty, cost, price, gst, total: (qty * cost) });
+  document.getElementById('pur-item-name').value = '';
+  document.getElementById('pur-item-code').value = '';
+  document.getElementById('pur-item-qty').value = '10';
+  document.getElementById('pur-item-cost').value = '';
+  document.getElementById('pur-item-price').value = '';
+  renderPurchaseTable();
+}
+
+function renderPurchaseTable() {
+  const tb = document.querySelector('#purchase-table tbody');
+  tb.innerHTML = '';
+  let gTot = 0;
+  purchaseCart.forEach((p, idx) => {
+    gTot += p.total;
+    tb.innerHTML += `<tr><td>${idx+1}</td><td>${p.code}</td><td>${p.name}</td><td>+${p.qty}</td><td>₹${p.cost}</td><td>₹${p.price}</td><td>₹${p.total.toFixed(2)}</td><td><button class="btn btn-danger" style="padding:2px 6px; font-size:11px;" onclick="purchaseCart.splice(${idx},1); renderPurchaseTable();">✕</button></td></tr>`;
+  });
+  document.getElementById('pur-grand-total').innerText = '₹' + gTot.toFixed(2);
+}
+
+function savePurchaseToCloud() {
+  if (purchaseCart.length === 0) return alert('Purchase list is empty!');
+  const supplier = document.getElementById('pur-supplier').value.trim() || 'Cash Purchase';
+  const refNo = document.getElementById('pur-ref').value.trim() || '-';
+  const remark = document.getElementById('pur-remark').value.trim() || '-';
+  const payMode = document.getElementById('pur-paymode').value;
+  const date = document.getElementById('pur-date').value;
+  const editId = document.getElementById('editing-purchase-id').value;
+
+  const purPayload = {
+    id: editId ? parseInt(editId) : Date.now(),
+    date: date,
+    supplier: supplier,
+    refNo: refNo,
+    payMode: payMode,
+    remark: remark,
+    total: purchaseCart.reduce((a,b)=>a+b.total, 0),
+    items: purchaseCart
+  };
+
+  fetch(PERMANENT_SCRIPT_URL + "?action=save_purchase&data=" + encodeURIComponent(JSON.stringify(purPayload)), { mode: 'no-cors' });
+
+  const existingIdx = purchases.findIndex(p => p.id === purPayload.id);
+  if (existingIdx >= 0) purchases[existingIdx] = purPayload;
+  else purchases.unshift(purPayload);
+
+  alert('Purchase recorded and synced to cloud inventory!');
+  purchaseCart = [];
+  document.getElementById('editing-purchase-id').value = '';
+  document.getElementById('pur-mode-title').innerHTML = '<i class="fa-solid fa-cart-flatbed" style="color:#16a34a;"></i> Inward Stock & Purchase Entry';
+  document.getElementById('pur-editing-badge').innerText = '';
+  document.getElementById('btn-save-pur').innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Save Purchase to Cloud';
+  renderPurchaseTable();
+  renderPurchaseHistoryTable();
+  syncInventoryStock();
+  document.getElementById('pur-supplier').value = '';
+  document.getElementById('pur-ref').value = '';
+  document.getElementById('pur-remark').value = '';
+}
+
+function editPurchase(purId) {
+  const p = purchases.find(x => x.id === purId || ("PUR-" + x.id) === purId);
+  if (!p) return;
+
+  document.getElementById('editing-purchase-id').value = p.id;
+  document.getElementById('pur-mode-title').innerHTML = `✏️ Editing Purchase PUR-${p.id}`;
+  document.getElementById('pur-editing-badge').innerText = `(Modifying Inward)`;
+  document.getElementById('btn-save-pur').innerHTML = `<i class="fa-solid fa-check"></i> Update Purchase PUR-${p.id}`;
+
+  document.getElementById('pur-supplier').value = p.supplier || '';
+  document.getElementById('pur-ref').value = p.refNo || '';
+  document.getElementById('pur-date').value = p.date || '';
+  document.getElementById('pur-paymode').value = p.payMode || 'Cash';
+  document.getElementById('pur-remark').value = p.remark || '';
+
+  purchaseCart = [...(p.items || [])];
+  renderPurchaseTable();
+  switchTab('purchase');
+}
+
+function getFilteredPurchaseInvoices() {
+  const from = document.getElementById('filter-pur-from').value;
+  const to = document.getElementById('filter-pur-to').value;
+  return purchases.filter(p => {
+    if (!p.date) return true;
+    if (from && p.date < from) return false;
+    if (to && p.date > to) return false;
+    return true;
+  });
+}
+
+function resetPurDateFilter() {
+  document.getElementById('filter-pur-from').value = '';
+  document.getElementById('filter-pur-to').value = '';
+  renderPurchaseHistoryTable();
+}
+
+function renderPurchaseHistoryTable() {
+  const tbody = document.getElementById('purchase-history-rows');
+  tbody.innerHTML = '';
+  const list = getFilteredPurchaseInvoices();
+  const badge = document.getElementById('pur-filter-badge');
+  if (badge) badge.innerText = `Showing ${list.length} of ${purchases.length} Purchases`;
+
+  list.forEach(p => {
+    const pItems = (p.items || []).map(it => `${it.name} (${it.qty}@₹${it.cost})`).join(', ');
+    tbody.innerHTML += `
+      <tr>
+        <td><strong>PUR-${p.id}</strong></td>
+        <td>${p.date}</td>
+        <td><strong>${p.supplier || 'Cash Purchase'}</strong></td>
+        <td>${p.refNo || '-'}</td>
+        <td style="color:#475569; font-style:italic;">${p.remark || '-'}</td>
+        <td style="font-weight:bold; color:#16a34a;">₹${p.total}</td>
+        <td style="font-size:12px; max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${pItems}</td>
+        <td>
+          <button class="btn btn-primary" style="padding:2px 6px; font-size:11px;" onclick="editPurchase(${p.id})">✏️ Edit</button>
+          <button class="btn btn-danger" style="padding:2px 6px; font-size:11px;" onclick="promptDeletePurchase('PUR-${p.id}')">🗑️ Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+// --- EXPORT ENGINES ---
+function exportInvoicesToExcel() {
+  const list = getFilteredSalesInvoices();
+  if (list.length === 0) return alert("No sales invoices found for the selected date range!");
+
+  let csv = "\uFEFF";
+  csv += "Invoice No,Bill Type,Date,Customer Name,Customer GSTIN,Phone,Address,Payment Mode,Taxable Value (Rs),CGST (Rs),SGST (Rs),Grand Total (Rs),Items Summary\n";
+
+  list.forEach(inv => {
+    const summary = (inv.items || []).map(i => `${i.name} (Qty:${i.qty}@${i.price})`).join('; ').replace(/"/g, '""');
+    csv += [
+      `"${inv.invDisplayNo}"`, `"${inv.type}"`, `"${inv.date}"`, `"${(inv.customer.name||'').replace(/"/g,'""')}"`,
+      `"${inv.customer.gstin||'-'}"`, `"${inv.customer.phone||'-'}"`, `"${(inv.customer.address||'').replace(/"/g,'""')}"`, `"${inv.payMode}"`,
+      inv.subtotal.toFixed(2), (inv.tax/2).toFixed(2), (inv.tax/2).toFixed(2), inv.grandTotal.toFixed(2), `"${summary}"`
+    ].join(",") + "\n";
+  });
+
+  downloadCsvBlob(csv, `Sales_Report_${new Date().toISOString().split('T')[0]}.csv`);
+}
+
+function exportPurchasesToExcel() {
+  const list = getFilteredPurchaseInvoices();
+  if (list.length === 0) return alert("No purchases found for the selected date range!");
+
+  let csv = "\uFEFF";
+  csv += "Purchase ID,Date,Supplier Name,Supplier Bill No,Remarks,Total Amount (Rs),Items Summary\n";
+
+  list.forEach(p => {
+    const summary = (p.items || []).map(it => `${it.name} (Qty:${it.qty}@Cost:${it.cost})`).join('; ').replace(/"/g, '""');
+    csv += [
+      `"PUR-${p.id}"`, `"${p.date}"`, `"${(p.supplier||'').replace(/"/g,'""')}"`,
+      `"${(p.refNo||'').replace(/"/g,'""')}"`, `"${(p.remark||'').replace(/"/g,'""')}"`, p.total, `"${summary}"`
+    ].join(",") + "\n";
+  });
+
+  downloadCsvBlob(csv, `Purchase_Report_${new Date().toISOString().split('T')[0]}.csv`);
+}
+
+function downloadGstr1Excel() {
+  const list = getFilteredSalesInvoices().filter(i => i.isGst);
+  if (list.length === 0) return alert("No GST Tax Invoices found for the selected date range!");
+
+  let csv = "\uFEFF";
+  csv += "=== GSTR-1 TABLE 7: B2CS SUMMARY (Rate-Wise) ===\n";
+  csv += "GST Rate (%),Taxable Value (Rs),CGST Amount (Rs),SGST Amount (Rs),Total Tax (Rs)\n";
+
+  let rateMap = {};
+  let hsnMap = {};
+
+  list.forEach(inv => {
+    (inv.items || []).forEach(it => {
+      const rt = it.taxRate || 18;
+      if (!rateMap[rt]) rateMap[rt] = { taxable: 0, tax: 0 };
+      rateMap[rt].taxable += it.taxable;
+      rateMap[rt].tax += it.taxVal;
+
+      const hCode = it.hsn || '8536';
+      if (!hsnMap[hCode]) hsnMap[hCode] = { name: it.name, unit: it.unit || 'Pcs', qty: 0, taxable: 0, tax: 0, rate: rt };
+      hsnMap[hCode].qty += it.qty;
+      hsnMap[hCode].taxable += it.taxable;
+      hsnMap[hCode].tax += it.taxVal;
+    });
+  });
+
+  for (let r in rateMap) {
+    const obj = rateMap[r];
+    csv += `${r}%,${obj.taxable.toFixed(2)},${(obj.tax/2).toFixed(2)},${(obj.tax/2).toFixed(2)},${obj.tax.toFixed(2)}\n`;
+  }
+
+  csv += "\n=== GSTR-1 TABLE 12: HSN SUMMARY ===\n";
+  csv += "HSN Code,Description,UQC,Total Qty,Total Taxable Value (Rs),GST Rate,CGST (Rs),SGST (Rs),Total Tax (Rs)\n";
+
+  for (let h in hsnMap) {
+    const ho = hsnMap[h];
+    csv += `"${h}","${ho.name.replace(/"/g,'""')}","${ho.unit}",${ho.qty},${ho.taxable.toFixed(2)},${ho.rate}%,${(ho.tax/2).toFixed(2)},${(ho.tax/2).toFixed(2)},${ho.tax.toFixed(2)}\n`;
+  }
+
+  downloadCsvBlob(csv, `GSTR1_Report_${new Date().toISOString().split('T')[0]}.csv`);
+}
+
+function downloadCsvBlob(content, filename) {
+  const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
 function renderStockTable() {
   const tb = document.querySelector('#stock-list-table tbody');
   tb.innerHTML = '';
@@ -2020,7 +2481,7 @@ function renderStockTable() {
 }
 
 function switchTab(tab) {
-  ['billing', 'purchase', 'history', 'ledger', 'stock', 'sync'].forEach(t => {
+  ['billing', 'return', 'purchase', 'history', 'ledger', 'stock', 'sync'].forEach(t => {
     document.getElementById('tab-' + t).style.display = (t === tab) ? 'block' : 'none';
   });
   document.querySelectorAll('.nav-btn, .b-nav').forEach(btn => {
@@ -2053,6 +2514,10 @@ document.addEventListener('click', function(e) {
     document.getElementById('cust-dropdown').style.display = 'none';
     const purD = document.getElementById('pur-dropdown');
     if (purD) purD.style.display = 'none';
+    const retD = document.getElementById('ret-dropdown');
+    if (retD) retD.style.display = 'none';
+    const retChoice = document.getElementById('ret-choice-dropdown');
+    if (retChoice) retChoice.style.display = 'none';
   }
 });
 
